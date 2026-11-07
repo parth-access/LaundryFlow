@@ -10,7 +10,7 @@ LaundryFlow will allow students to submit laundry requests through their account
 
 ## Features
 
-- **Student accounts** — Student details are pre-filled wherever possible.
+- **Student accounts** — Students create their own profile and register their bag tag (for example B 1054 or G 1054). Staff verify the bag on the first drop-off.
 - **Laundry requests** — Students can enter the details and quantity of clothes submitted.
 - **Staff verification** — Staff can review requests and confirm the clothes received.
 - **Clothes limit** — The system tracks the existing limit of 10 clothes.
@@ -19,7 +19,7 @@ LaundryFlow will allow students to submit laundry requests through their account
 
 ## How It Works
 
-1. The student logs in to their account.
+1. The student signs up once with their bag tag, then logs in.
 2. The student enters the details of the clothes being submitted.
 3. A laundry request is created.
 4. Laundry staff review the request and verify the clothes received.
@@ -28,7 +28,7 @@ LaundryFlow will allow students to submit laundry requests through their account
 ## User Roles
 
 ### Student
-- Access personal account details.
+- Create a profile and register their bag tag.
 - Submit laundry requests.
 - View submitted requests and their status.
 
@@ -48,11 +48,11 @@ Proposed starter stack (change it by agreeing as a team, then update this sectio
 - **Language:** JavaScript only (`.js` files). We do not use TypeScript.
 - **Frontend and backend:** [Next.js](https://nextjs.org) 16 (App Router)
 - **Styling:** Tailwind CSS 4
-- **Database:** PostgreSQL, accessed with the [`postgres`](https://github.com/porsager/postgres) driver and plain SQL (no ORM, because the database design and queries are graded in the DE course)
+- **Database:** PostgreSQL hosted on Supabase, accessed with the [`postgres`](https://github.com/porsager/postgres) driver and plain SQL (no ORM, because the database design and queries are graded in the DE course)
 
 ## Getting Started
 
-You need Node.js 20.9 or newer and a PostgreSQL database (local, or a free Supabase project).
+You need Node.js 20.9 or newer. The team database is on Supabase: ask Parth for the connection string (never commit it).
 
 ```bash
 git clone https://github.com/parth-access/LaundryFlow.git
