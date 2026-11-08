@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-24 text-center">
@@ -6,9 +8,12 @@ export default function Home() {
         Digital laundry register: students submit, staff verify, fines are
         calculated automatically.
       </p>
-      <p className="font-mono text-sm text-zinc-500">
-        Starter page. Replace it with the landing / login screen.
-      </p>
+      <Link
+        href="/login"
+        className="rounded-lg bg-zinc-900 px-5 py-3 font-medium text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+      >
+        Sign in
+      </Link>
     </main>
   );
 }

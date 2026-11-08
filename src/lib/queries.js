@@ -73,6 +73,34 @@ WHERE o.student_id = $1
 ORDER BY o.submitted_at DESC`,
   },
 
+  R04: {
+    id: "R04",
+    title: "Find a student by email",
+    purpose:
+      "Used after Google sign-in to link the login to a student profile. " +
+      "Emails are stored in lowercase and are unique.",
+    params: ["email"],
+    text: `
+SELECT student_id, enrollment_no, full_name, email, bag_prefix, bag_number,
+       bag_verified_at, is_active
+FROM students
+WHERE email = $1`,
+  },
+
+  R05: {
+    id: "R05",
+    title: "Find an active staff member by email",
+    purpose:
+      "Used after Google sign-in to see whether the account belongs to laundry staff. " +
+      "Staff are added by an admin, so being on this list is what grants staff access.",
+    params: ["email"],
+    text: `
+SELECT staff_id, full_name, email, role
+FROM staff
+WHERE email = $1
+  AND is_active`,
+  },
+
   W01: {
     id: "W01",
     title: "Submit an order",
@@ -84,5 +112,19 @@ ORDER BY o.submitted_at DESC`,
 INSERT INTO orders (student_id, order_status, declared_count, submitted_at)
 VALUES ($1, 'SUBMITTED', $2, now())
 RETURNING order_id, submitted_at`,
+  },
+
+  W02: {
+    id: "W02",
+    title: "Register a student profile",
+    purpose:
+      "A student creates their own profile after their first Google sign-in. " +
+      "The bag tag is unverified until staff check it at the first drop-off " +
+      "(bag_verified_at and bag_verified_by stay NULL).",
+    params: ["enrollment_no", "full_name", "email", "bag_prefix", "bag_number"],
+    text: `
+INSERT INTO students (enrollment_no, full_name, email, bag_prefix, bag_number)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING student_id`,
   },
 };
