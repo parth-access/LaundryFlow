@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { requireAccess } from "@/lib/auth";
 import { signOut } from "@/app/auth/actions";
 
@@ -27,7 +28,10 @@ async function Dashboard() {
           <p>
             Signed in as <strong>{access.staff.full_name}</strong> ({access.staff.role.toLowerCase()}).
           </p>
-          <p className="font-mono text-sm text-zinc-500">Placeholder: the counter queue goes here.</p>
+          <div className="flex justify-center gap-3">
+            <Link href="/counter" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Counter</Link>
+            <Link href="/fines" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Fines and pickup</Link>
+          </div>
         </>
       ) : (
         <>
@@ -39,7 +43,7 @@ async function Dashboard() {
             </strong>{" "}
             ({access.student.bag_verified_at ? "verified by staff" : "not verified yet"}).
           </p>
-          <p className="font-mono text-sm text-zinc-500">Placeholder: submit laundry and your history go here.</p>
+          <Link href="/student" className="inline-block rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">My laundry</Link>
         </>
       )}
 

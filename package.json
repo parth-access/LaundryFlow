@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "queries:export": "node scripts/export-queries.js",
-    "test": "node --test src/lib/email-rules.test.js src/lib/access.test.js"
+    "test": "node --test src/lib/email-rules.test.js src/lib/access.test.js src/lib/fines.test.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

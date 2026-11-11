@@ -127,4 +127,26 @@ INSERT INTO students (enrollment_no, full_name, email, bag_prefix, bag_number)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING student_id`,
   },
+
+  // ---- Aarabdh: R10-R19, W10-W19 (student side) ----
+
+  // ---- Tanishq: R20-R29, W20-W29 (counter side) ----
+
+  // ---- Dhruv: R30-R39, W30-W39 (fines and pickup) ----
+  R30: {
+    id: "R30",
+    title: "Unpaid fines",
+    purpose:
+      "Every fine not yet paid or waived, oldest first, with the student's bag tag. " +
+      "Uses the partial index ix_fines_unpaid.",
+    params: [],
+    text: `
+SELECT f.order_id, f.fine_amount, o.received_at,
+       s.bag_prefix, s.bag_number, s.full_name
+FROM fines f
+JOIN orders o ON o.order_id = f.order_id
+JOIN students s ON s.student_id = o.student_id
+WHERE f.fine_status = 'UNPAID'
+ORDER BY o.received_at`,
+  },
 };

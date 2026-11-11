@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createSupabaseServer } from "./supabase/server.js";
 import { run } from "./db.js";
 import { resolveAccess } from "./access.js";
@@ -16,6 +17,17 @@ import { normalizeEmail } from "./email-rules.js";
  * Reads cookies, so call it inside a <Suspense> boundary (Cache Components rule).
  */
 export async function getAccess() {
+  // DEVELOPMENT ONLY: pretend to be signed in as DEV_LOGIN_EMAIL (set in .env.local),
+  // so the team can build screens before Google sign-in is set up.
+  // `next build` / `next start` run in production mode, where this is ignored.
+  if (process.env.NODE_ENV === "development" && process.env.DEV_LOGIN_EMAIL) {
+    await connection();
+    const email = normalizeEmail(process.env.DEV_LOGIN_EMAIL);
+    const [staff] = await run("R05", [email]);
+    const [student] = await run("R04", [email]);
+    return { ...resolveAccess({ email, staff: staff ?? null, student: student ?? null }), name: "Dev User" };
+  }
+
   const supabase = await createSupabaseServer();
   // getUser() asks Supabase to confirm the session. Do not use getSession()
   // for decisions: it only reads the cookie, which the browser controls.
