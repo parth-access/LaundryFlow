@@ -8,7 +8,7 @@ Each folder already has a working page; build on it. `TODO` comments mark where 
 | Aarabdh | `src/app/student/` (`/student`) | R10-R19, W10-W19 | `aman@nst.rishihood.edu.in` |
 | Tanishq | `src/app/counter/` (`/counter`) | R20-R29, W20-W29 | `counter@demo.laundryflow` |
 | Dhruv | `src/app/fines/` (`/fines`) | R30-R39, W30-W39 | `counter@demo.laundryflow` |
-| Parth | login, Supabase, deploy, merging, README | - | any |
+| Parth | `src/app/admin/` (`/admin`) + login, Supabase, deploy | R40-R49, W40-W49 | `admin@demo.laundryflow` |
 
 ## First day setup (everyone, about 15 minutes)
 
@@ -39,7 +39,11 @@ The demo data (`scripts/demo-data.sql`) has one order in every state: two waitin
 - [ ] Unpaid fines list is done (R30). Add "Paid" (W32, sets fine_paid_at) and "Waive" with a reason (W33, sets waived_by and waiver_reason).
 - [ ] DE repo: ER diagram `dbms/02_er_diagram.png` in LaundryFlow_AP_2026 (due Tue 17).
 
-### Parth
+### Parth: admin (`/admin`) + setup
+- [ ] Staff list is done (R40). Add staff form (W40) and deactivate / reactivate (W41); an admin cannot deactivate themselves.
+- [ ] Fine policy: history is done (R41). "New policy" form (W42) inserts a new row, never edits an old one.
+- [ ] Numbers at a glance: orders today, waiting at the counter, unpaid fines total (R42).
+- [ ] DE: large dataset generator in LaundryFlow_AP_2026 (`dbms/generate_data.py`), so Tanishq can time the queries.
 - [ ] Supabase project, run `dbms/03_schema.sql` then `scripts/demo-data.sql`, send everyone the `.env.local` values.
 - [ ] Google sign-in setup (README, "One-time Supabase setup").
 - [ ] Deploy (Vercel) by Sat 14, then everyone tests one full order end to end.

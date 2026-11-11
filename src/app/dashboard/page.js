@@ -31,6 +31,9 @@ async function Dashboard() {
           <div className="flex justify-center gap-3">
             <Link href="/counter" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Counter</Link>
             <Link href="/fines" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Fines and pickup</Link>
+            {access.staff.role === "ADMIN" && (
+              <Link href="/admin" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Admin</Link>
+            )}
           </div>
         </>
       ) : (

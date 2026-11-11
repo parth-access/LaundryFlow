@@ -149,4 +149,29 @@ JOIN students s ON s.student_id = o.student_id
 WHERE f.fine_status = 'UNPAID'
 ORDER BY o.received_at`,
   },
+
+  // ---- Parth: R40-R49, W40-W49 (admin) ----
+  R40: {
+    id: "R40",
+    title: "All staff",
+    purpose: "Admin page: everyone on the staff list, active first.",
+    params: [],
+    text: `
+SELECT staff_id, full_name, email, role, is_active
+FROM staff
+ORDER BY is_active DESC, full_name`,
+  },
+
+  R41: {
+    id: "R41",
+    title: "Fine policy history",
+    purpose:
+      "Admin page: every fine rule, newest first. Rules are never edited; a change is a new row, " +
+      "so each order keeps the rule it was counted under (orders.policy_id).",
+    params: [],
+    text: `
+SELECT policy_id, effective_from, free_limit, fine_per_extra
+FROM policies
+ORDER BY effective_from DESC`,
+  },
 };
