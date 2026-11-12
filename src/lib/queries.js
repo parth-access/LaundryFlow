@@ -143,6 +143,24 @@ WHERE student_id = $1
 LIMIT 1`,
   },
 
+  W10: {
+    id: "W10",
+    title: "Submit order if no active order exists",
+    purpose:
+      "Atomically checks for an active order and inserts a new order if none exists.",
+    params: ["student_id", "declared_count"],
+    text: `
+INSERT INTO orders (student_id, order_status, declared_count, submitted_at)
+SELECT $1, 'SUBMITTED', $2, now()
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM orders
+  WHERE student_id = $1
+    AND order_status IN ('SUBMITTED', 'RECEIVED', 'READY')
+)
+RETURNING order_id, submitted_at`,
+  },
+
   // ---- Tanishq: R20-R29, W20-W29 (counter side) ----
 
   // ---- Dhruv: R30-R39, W30-W39 (fines and pickup) ----
