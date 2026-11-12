@@ -8,7 +8,7 @@ Each folder already has a working page; build on it. `TODO` comments mark where 
 | Aarabdh | `src/app/student/` (`/student`) | R10-R19, W10-W19 | `aman@nst.rishihood.edu.in` |
 | Tanishq | `src/app/counter/` (`/counter`) | R20-R29, W20-W29 | `counter@demo.laundryflow` |
 | Dhruv | `src/app/fines/` (`/fines`) | R30-R39, W30-W39 | `counter@demo.laundryflow` |
-| Parth | `src/app/admin/` (`/admin`) + login, Supabase, deploy | R40-R49, W40-W49 | `admin@demo.laundryflow` |
+| Parth | `src/app/admin/` (`/admin`), **UI owner** (landing page, look and feel) + login, Supabase, deploy | R40-R49, W40-W49 | `admin@demo.laundryflow` |
 
 ## First day setup (everyone, about 15 minutes)
 
@@ -44,11 +44,13 @@ The demo data (`scripts/demo-data.sql`) has one order in every state: two waitin
 - [ ] Fine policy: history is done (R41). "New policy" form (W42) inserts a new row, never edits an old one.
 - [ ] Numbers at a glance: orders today, waiting at the counter, unpaid fines total (R42).
 - [ ] DE: large dataset generator in LaundryFlow_AP_2026 (`dbms/generate_data.py`), so Tanishq can time the queries.
+- [ ] **UI owner.** Landing page `/` (rough version is up). Sat 14 UI pass: top bar with logo + sign out on every signed-in page, check every screen on a phone, make every screen use `src/components/ui.js`, empty and loading states.
 - [ ] Supabase project, run `dbms/03_schema.sql` then `scripts/demo-data.sql`, send everyone the `.env.local` values.
 - [ ] Google sign-in setup (README, "One-time Supabase setup").
 - [ ] Deploy (Vercel) by Sat 14, then everyone tests one full order end to end.
 
 ## Rules
+- **UI:** build your screen with the shared pieces in `src/components/ui.js` (`Button`, `Card`, `Alert`, `BagTag`, `StatusBadge`). Do not style buttons or messages from scratch. Parth owns the overall look.
 - Pull before you push: `git pull` then `git push`.
 - Only edit your own folder and your own query ids. Shared files (`src/components/ui.js`, `src/lib/*`): tell the group first.
 - Staff identity for writes: `const { staff } = await requireAccess(["staff"])`, then use `staff.staff_id`. Never take it from the form.
