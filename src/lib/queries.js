@@ -129,6 +129,19 @@ RETURNING student_id`,
   },
 
   // ---- Aarabdh: R10-R19, W10-W19 (student side) ----
+  R10: {
+    id: "R10",
+    title: "Check student's active laundry order",
+    purpose:
+      "Checks whether a student has an order that is submitted, received, or ready.",
+    params: ["student_id"],
+    text: `
+SELECT order_id, order_status
+FROM orders
+WHERE student_id = $1
+  AND order_status IN ('SUBMITTED', 'RECEIVED', 'READY')
+LIMIT 1`,
+  },
 
   // ---- Tanishq: R20-R29, W20-W29 (counter side) ----
 
@@ -240,7 +253,6 @@ WHERE order_id = $1
   AND fine_status = 'UNPAID'
 RETURNING order_id`,
   },
-
 
   // ---- Parth: R40-R49, W40-W49 (admin) ----
   R40: {
