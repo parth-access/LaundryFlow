@@ -149,6 +149,98 @@ JOIN students s ON s.student_id = o.student_id
 WHERE f.fine_status = 'UNPAID'
 ORDER BY o.received_at`,
   },
+  R31: {
+    id: "R31",
+    title: "Orders ready to wash",
+    purpose:
+      "Lists all received orders waiting to be washed, with the student's bag tag, verified clothes count and received time.",
+    params: [],
+    text: `
+SELECT o.order_id, o.verified_count, o.received_at,
+       s.bag_prefix, s.bag_number, s.full_name
+FROM orders o
+JOIN students s ON s.student_id = o.student_id
+WHERE o.order_status = 'RECEIVED'
+ORDER BY o.received_at`,
+  },
+
+  R32: {
+    id: "R32",
+    title: "Orders waiting for pickup",
+    purpose:
+      "Lists all ready orders waiting to be collected by students, with their bag tag and ready time.",
+    params: [],
+    text: `
+SELECT o.order_id, o.verified_count, o.ready_at,
+       s.bag_prefix, s.bag_number, s.full_name
+FROM orders o
+JOIN students s ON s.student_id = o.student_id
+WHERE o.order_status = 'READY'
+ORDER BY o.ready_at`,
+  },
+
+  W30: {
+    id: "W30",
+    title: "Mark order ready",
+    purpose:
+      "Changes a received order to READY and records when washing is completed. Only received orders can be updated.",
+    params: ["order_id"],
+    text: `
+UPDATE orders
+SET order_status = 'READY',
+    ready_at = now()
+WHERE order_id = $1
+  AND order_status = 'RECEIVED'
+RETURNING order_id`,
+  },
+
+  W31: {
+    id: "W31",
+    title: "Mark order collected",
+    purpose:
+      "Marks a ready order as COLLECTED and records the collection time and staff member responsible.",
+    params: ["order_id", "staff_id"],
+    text: `
+UPDATE orders
+SET order_status = 'COLLECTED',
+    collected_at = now(),
+    collected_by = $2
+WHERE order_id = $1
+  AND order_status = 'READY'
+RETURNING order_id`,
+  },
+
+  W32: {
+    id: "W32",
+    title: "Mark fine paid",
+    purpose:
+      "Marks an unpaid fine as PAID and records the payment time. Already paid or waived fines cannot be updated.",
+    params: ["order_id"],
+    text: `
+UPDATE fines
+SET fine_status = 'PAID',
+    fine_paid_at = now()
+WHERE order_id = $1
+  AND fine_status = 'UNPAID'
+RETURNING order_id`,
+  },
+
+  W33: {
+    id: "W33",
+    title: "Waive unpaid fine",
+    purpose:
+      "Waives an unpaid fine and records the responsible staff member and reason for the waiver.",
+    params: ["order_id", "staff_id", "waiver_reason"],
+    text: `
+UPDATE fines
+SET fine_status = 'WAIVED',
+    waived_by = $2,
+    waiver_reason = $3
+WHERE order_id = $1
+  AND fine_status = 'UNPAID'
+RETURNING order_id`,
+  },
+
 
   // ---- Parth: R40-R49, W40-W49 (admin) ----
   R40: {
