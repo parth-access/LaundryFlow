@@ -1,60 +1,107 @@
+// OWNER: Parth (UI). Home after sign-in: a card per area, with live counts.
 import { Suspense } from "react";
 import Link from "next/link";
 import { requireAccess } from "@/lib/auth";
-import { signOut } from "@/app/auth/actions";
+import { run } from "@/lib/db";
+import { Card, BagTag, StatusBadge, money } from "@/components/ui";
+import { AppPage } from "@/components/app-page";
 
 export const metadata = { title: "Dashboard | LaundryFlow" };
 
 export default function DashboardPage() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-6 py-24">
-      <div className="w-full max-w-md space-y-6 text-center">
-        <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
-          <Dashboard />
-        </Suspense>
-      </div>
-    </main>
+    <AppPage title="Dashboard" back={null}>
+      <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
+        <Dashboard />
+      </Suspense>
+    </AppPage>
+  );
+}
+
+function AreaCard({ href, title, text, stat, statLabel }) {
+  return (
+    <Link href={href} className="group block">
+      <Card className="h-full transition-shadow group-hover:shadow-md group-hover:ring-1 group-hover:ring-teal-500/40">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-medium">{title}</h2>
+            <p className="mt-1 text-sm text-zinc-500">{text}</p>
+          </div>
+          {stat !== undefined && (
+            <div className="text-right">
+              <p className="text-3xl font-semibold text-teal-600 dark:text-teal-400">{stat}</p>
+              <p className="text-xs text-zinc-500">{statLabel}</p>
+            </div>
+          )}
+        </div>
+        <p className="mt-4 text-sm font-medium text-teal-600 group-hover:underline dark:text-teal-400">Open &rarr;</p>
+      </Card>
+    </Link>
   );
 }
 
 async function Dashboard() {
   const access = await requireAccess(["student", "staff"]);
 
-  return (
-    <>
-      {access.kind === "staff" ? (
-        <>
-          <h1 className="text-3xl font-semibold tracking-tight">Laundry counter</h1>
-          <p>
-            Signed in as <strong>{access.staff.full_name}</strong> ({access.staff.role.toLowerCase()}).
-          </p>
-          <div className="flex justify-center gap-3">
-            <Link href="/counter" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Counter</Link>
-            <Link href="/fines" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Fines and pickup</Link>
-            {access.staff.role === "ADMIN" && (
-              <Link href="/admin" className="rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">Admin</Link>
-            )}
+  if (access.kind === "student") {
+    const s = access.student;
+    const [active] = await run("R10", [s.student_id]);
+    return (
+      <div className="space-y-6">
+        <Card className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-sm text-zinc-500">Welcome back</p>
+            <p className="text-xl font-semibold">{s.full_name}</p>
           </div>
-        </>
-      ) : (
-        <>
-          <h1 className="text-3xl font-semibold tracking-tight">Hello, {access.student.full_name}</h1>
-          <p>
-            Your bag tag is{" "}
-            <strong>
-              {access.student.bag_prefix} {access.student.bag_number}
-            </strong>{" "}
-            ({access.student.bag_verified_at ? "verified by staff" : "not verified yet"}).
-          </p>
-          <Link href="/student" className="inline-block rounded-lg bg-zinc-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-zinc-900">My laundry</Link>
-        </>
-      )}
+          <div className="text-right">
+            <BagTag prefix={s.bag_prefix} number={s.bag_number} />
+            <p className="mt-1 text-xs text-zinc-500">{s.bag_verified_at ? "verified by staff" : "not verified yet"}</p>
+          </div>
+        </Card>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <AreaCard
+            href="/student"
+            title="My laundry"
+            text={active ? "Your current order is in progress." : "No laundry in progress. Submit a new bag."}
+          />
+          {active && (
+            <Card className="flex items-center justify-between">
+              <span className="text-sm text-zinc-500">Current order</span>
+              <StatusBadge status={active.order_status} />
+            </Card>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-      <form action={signOut}>
-        <button type="submit" className="rounded-lg border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900">
-          Sign out
-        </button>
-      </form>
-    </>
+  const isAdmin = access.staff.role === "ADMIN";
+  const [queue, unpaid] = await Promise.all([run("R02"), run("R30")]);
+  const unpaidTotal = unpaid.reduce((sum, f) => sum + Number(f.fine_amount), 0);
+
+  return (
+    <div className="space-y-6">
+      <p className="text-zinc-500">
+        Signed in as <span className="font-medium text-zinc-900 dark:text-zinc-100">{access.staff.full_name}</span>{" "}
+        ({access.staff.role.toLowerCase()})
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <AreaCard
+          href="/counter"
+          title="Counter"
+          text="Find a bag, count the clothes, record the fine."
+          stat={queue.length}
+          statLabel="waiting"
+        />
+        <AreaCard
+          href="/fines"
+          title="Fines & pickup"
+          text="Mark ready and collected, settle fines."
+          stat={unpaid.length}
+          statLabel={`unpaid · ${money(unpaidTotal)}`}
+        />
+        {isAdmin && <AreaCard href="/admin" title="Admin" text="Staff accounts, fine policy and numbers." />}
+      </div>
+    </div>
   );
 }
