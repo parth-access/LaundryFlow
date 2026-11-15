@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { signInWithGoogle } from "./actions";
 
 export const metadata = { title: "Sign in | LaundryFlow" };
@@ -11,9 +12,12 @@ const MESSAGES = {
 
 export default function LoginPage({ searchParams }) {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-24">
-      <div className="w-full max-w-sm space-y-6 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight">Sign in to LaundryFlow</h1>
+    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16">
+      <Link href="/" className="text-xl font-semibold tracking-tight">
+        Laundry<span className="text-teal-600 dark:text-teal-400">Flow</span>
+      </Link>
+      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+        <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
         <p className="text-zinc-600 dark:text-zinc-400">
           Students sign in with their college Google account. Laundry staff use the Google account an admin has added.
         </p>
@@ -26,8 +30,11 @@ export default function LoginPage({ searchParams }) {
         <form action={signInWithGoogle}>
           <button
             type="submit"
-            className="w-full rounded-lg bg-zinc-900 px-4 py-3 font-medium text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
           >
+            <span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white">
+              G
+            </span>
             Continue with Google
           </button>
         </form>

@@ -7,9 +7,15 @@ export const metadata = { title: "Create your profile | LaundryFlow" };
 
 export default function RegisterPage() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-6 py-24">
-      <div className="w-full max-w-sm space-y-6">
-        <h1 className="text-center text-3xl font-semibold tracking-tight">Create your profile</h1>
+    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16">
+      <span className="text-xl font-semibold tracking-tight">
+        Laundry<span className="text-teal-600 dark:text-teal-400">Flow</span>
+      </span>
+      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Create your profile</h1>
+          <p className="mt-1 text-sm text-zinc-500">One time only. Your bag tag is how the counter finds you.</p>
+        </div>
         <Suspense fallback={<p className="text-center text-zinc-500">Loading...</p>}>
           <Form />
         </Suspense>
