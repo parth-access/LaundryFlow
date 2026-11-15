@@ -158,6 +158,7 @@ WHERE NOT EXISTS (
   WHERE student_id = $1
     AND order_status IN ('SUBMITTED', 'RECEIVED', 'READY')
 )
+ON CONFLICT DO NOTHING
 RETURNING order_id, submitted_at`,
   },
 
