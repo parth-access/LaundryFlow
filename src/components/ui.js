@@ -4,16 +4,17 @@
  */
 import Link from "next/link";
 
-export function Page({ title, back = "/dashboard", children }) {
+export function Page({ title, subtitle, back = "/dashboard", children }) {
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-6 py-10">
+    <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
       <div className="space-y-1">
         {back && (
-          <Link href={back} className="text-sm text-zinc-500 hover:underline">
+          <Link href={back} className="text-sm text-zinc-500 hover:text-teal-600 dark:hover:text-teal-400">
             &larr; Back
           </Link>
         )}
-        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
+        {subtitle && <p className="text-zinc-500">{subtitle}</p>}
       </div>
       {children}
     </main>
@@ -22,13 +23,16 @@ export function Page({ title, back = "/dashboard", children }) {
 
 export function Card({ children, className = "" }) {
   return (
-    <section className={`rounded-xl border border-zinc-200 p-5 dark:border-zinc-800 ${className}`}>{children}</section>
+    <section
+      className={`rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 ${className}`}
+    >
+      {children}
+    </section>
   );
 }
 
 const buttonStyles = {
-  primary:
-    "bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200",
+  primary: "bg-teal-600 text-white hover:bg-teal-700 focus-visible:outline-teal-600",
   secondary: "border border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900",
   danger: "bg-red-600 text-white hover:bg-red-500",
 };
@@ -36,7 +40,7 @@ const buttonStyles = {
 export function Button({ variant = "primary", className = "", ...props }) {
   return (
     <button
-      className={`rounded-lg px-4 py-2 font-medium disabled:opacity-60 ${buttonStyles[variant]} ${className}`}
+      className={`rounded-lg px-4 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${buttonStyles[variant]} ${className}`}
       {...props}
     />
   );
