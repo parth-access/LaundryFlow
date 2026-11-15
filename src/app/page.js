@@ -43,7 +43,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/login"
-                className="rounded-lg bg-zinc-900 px-5 py-3 font-medium text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+                className="rounded-lg bg-teal-600 px-5 py-3 font-medium text-white hover:bg-teal-700"
               >
                 Sign in with college Google
               </Link>
