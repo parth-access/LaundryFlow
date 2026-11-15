@@ -3,18 +3,19 @@
 import { Suspense } from "react";
 import { requireAccess } from "@/lib/auth";
 import { run } from "@/lib/db";
-import { Page, Card, BagTag, StatusBadge, money, when } from "@/components/ui";
+import { Card, BagTag, StatusBadge, money, when } from "@/components/ui";
+import { AppPage } from "@/components/app-page";
 import SubmitForm from "./submit-form";
 
 export const metadata = { title: "My laundry | LaundryFlow" };
 
 export default function StudentPage() {
   return (
-    <Page title="My laundry">
+    <AppPage title="My laundry">
       <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
         <StudentHome />
       </Suspense>
-    </Page>
+    </AppPage>
   );
 }
 

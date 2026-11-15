@@ -50,7 +50,7 @@ The demo data (`scripts/demo-data.sql`) has one order in every state: two waitin
 - [ ] Deploy (Vercel) by Sat 14, then everyone tests one full order end to end.
 
 ## Rules
-- **UI:** build your screen with the shared pieces in `src/components/ui.js` (`Button`, `Card`, `Alert`, `BagTag`, `StatusBadge`). Do not style buttons or messages from scratch. Parth owns the overall look.
+- **UI:** wrap your page in `AppPage` from `src/components/app-page.js` (adds the top bar), and build it with the shared pieces in `src/components/ui.js` (`Button`, `Card`, `Alert`, `BagTag`, `StatusBadge`). Do not style buttons or messages from scratch. Parth owns the overall look.
 - Pull before you push: `git pull` then `git push`.
 - Only edit your own folder and your own query ids. Shared files (`src/components/ui.js`, `src/lib/*`): tell the group first.
 - Staff identity for writes: `const { staff } = await requireAccess(["staff"])`, then use `staff.staff_id`. Never take it from the form.

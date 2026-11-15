@@ -3,17 +3,18 @@
 import { Suspense } from "react";
 import { requireAccess } from "@/lib/auth";
 import { run } from "@/lib/db";
-import { Page, Card, BagTag, when } from "@/components/ui";
+import { Card, BagTag, when } from "@/components/ui";
+import { AppPage } from "@/components/app-page";
 
 export const metadata = { title: "Counter | LaundryFlow" };
 
 export default function CounterPage() {
   return (
-    <Page title="Laundry counter">
+    <AppPage title="Laundry counter">
       <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
         <Queue />
       </Suspense>
-    </Page>
+    </AppPage>
   );
 }
 

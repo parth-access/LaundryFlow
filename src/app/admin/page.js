@@ -4,17 +4,18 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { requireAccess } from "@/lib/auth";
 import { run } from "@/lib/db";
-import { Page, Card, money } from "@/components/ui";
+import { Card, money } from "@/components/ui";
+import { AppPage } from "@/components/app-page";
 
 export const metadata = { title: "Admin | LaundryFlow" };
 
 export default function AdminPage() {
   return (
-    <Page title="Admin">
+    <AppPage title="Admin">
       <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
         <Admin />
       </Suspense>
-    </Page>
+    </AppPage>
   );
 }
 

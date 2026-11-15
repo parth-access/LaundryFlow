@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { requireAccess } from "@/lib/auth";
 import { run } from "@/lib/db";
 import {
-  Page,
   Card,
   BagTag,
   Button,
@@ -11,6 +10,7 @@ import {
   money,
   when,
 } from "@/components/ui";
+import { AppPage } from "@/components/app-page";
 
 import {
   markReady,
@@ -32,13 +32,13 @@ const errorMessages = {
 
 export default function FinesPage({ searchParams }) {
   return (
-    <Page title="Fines and pickup">
+    <AppPage title="Fines and pickup">
       <Suspense
         fallback={<p className="text-zinc-500">Loading...</p>}
       >
         <Fines searchParams={searchParams} />
       </Suspense>
-    </Page>
+    </AppPage>
   );
 }
 
