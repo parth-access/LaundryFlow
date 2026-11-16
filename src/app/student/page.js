@@ -32,7 +32,6 @@ async function StudentHome() {
           Bag tag{" "}
           <BagTag prefix={student.bag_prefix} number={student.bag_number} />
         </p>
-        {/* TODO (Aarabdh): "Submit laundry" form -> server action in ./actions.js -> run("W01", [...]) */}
         <SubmitForm hasActiveOrder={hasActiveOrder} />
       </Card>
 
