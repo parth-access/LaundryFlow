@@ -129,14 +129,15 @@ function BagResult({ student, selected, onSelect }) {
             <span aria-hidden className="size-1.5 rounded-full bg-green-600" />
             Bag verified
           </span>
-        ) : (
+        ) : selected ? (
+          // Show Verify only on the bag staff selected, so the wrong B or G bag is not verified.
           <form action={verifyAction} className="self-start sm:self-auto">
             <input type="hidden" name="student_id" value={student.student_id} />
             <Button type="submit" variant="secondary" disabled={verifying} className="min-h-10 text-sm">
               {verifying ? "Verifying…" : "Verify bag"}
             </Button>
           </form>
-        )}
+        ) : null}
       </div>
 
       {verifyState.error && verifyState.studentId === student.student_id && (

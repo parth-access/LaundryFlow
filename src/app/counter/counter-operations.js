@@ -17,7 +17,7 @@ export default function CounterOperations({ queue }) {
     <div className="space-y-6">
       <BagLookup />
 
-      {receiveState.error && <Alert>{receiveState.error}</Alert>}
+      {receiveState.error && !receiveState.orderId && <Alert>{receiveState.error}</Alert>}
       {receiveState.success && (
         <Alert kind="success">
           Order {receiveState.orderId} received · {receiveState.verifiedCount} items counted ·{" "}
@@ -68,6 +68,7 @@ export default function CounterOperations({ queue }) {
                     order={order}
                     action={receiveAction}
                     pending={receiving}
+                    rowState={receiveState.orderId === order.order_id ? receiveState : null}
                   />
                 </div>
               </li>
@@ -79,10 +80,11 @@ export default function CounterOperations({ queue }) {
   );
 }
 
-function ReceiveForm({ order, action, pending }) {
-  const preserveValue = action && Number.isFinite(Number(order.declared_count))
-    ? order.declared_count
-    : "";
+function ReceiveForm({ order, action, pending, rowState }) {
+  // Start empty so staff type the real count. If saving fails, keep what they typed.
+  const rowError = rowState?.error ?? null;
+  const countValue = rowError ? rowState.verifiedCount ?? "" : "";
+  const errorId = `verified-count-error-${order.order_id}`;
 
   return (
     <form action={action} className="w-full rounded-xl bg-zinc-50 p-3 dark:bg-zinc-900/70 lg:w-[22rem]">
@@ -101,7 +103,8 @@ function ReceiveForm({ order, action, pending }) {
             max="100"
             step="1"
             required
-            defaultValue={preserveValue}
+            defaultValue={countValue}
+            aria-describedby={rowError ? errorId : undefined}
             className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-base tabular-nums outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-950"
           />
         </div>
@@ -109,6 +112,11 @@ function ReceiveForm({ order, action, pending }) {
           {pending ? "Saving…" : "Receive order"}
         </Button>
       </div>
+      {rowError && (
+        <p id={errorId} role="alert" className="mt-2 text-sm text-red-700 dark:text-red-300">
+          {rowError}
+        </p>
+      )}
       <p className="mt-2 text-xs text-zinc-500">Fee is calculated from the active policy after the count is saved.</p>
     </form>
   );
