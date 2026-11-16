@@ -55,7 +55,7 @@ async function Admin() {
         <ul className="space-y-1 text-sm">
           {policies.map((p) => (
             <li key={p.policy_id}>
-              From {String(p.effective_from).slice(0, 10)}: {p.free_limit} clothes free, {money(p.fine_per_extra)} per extra
+              From {new Date(p.effective_from).toISOString().slice(0, 10)}: {p.free_limit} clothes free, {money(p.fine_per_extra)} per extra
             </li>
           ))}
         </ul>
