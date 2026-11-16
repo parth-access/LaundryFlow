@@ -164,6 +164,66 @@ RETURNING order_id, submitted_at`,
 
   // ---- Tanishq: R20-R29, W20-W29 (counter side) ----
 
+  R20: {
+    id: "R20",
+    title: "Current fine policy",
+    purpose:
+      "Counter receipt: returns the latest fine policy effective on the receipt date.",
+    params: [],
+    text: `
+SELECT policy_id, free_limit, fine_per_extra
+FROM policies
+WHERE effective_from <= CURRENT_DATE
+ORDER BY effective_from DESC
+LIMIT 1`,
+  },
+
+  W20: {
+    id: "W20",
+    title: "Receive a submitted order",
+    purpose:
+      "Records the verified count, policy, receipt time, and staff member. Only a still-submitted order can be received.",
+    params: ["order_id", "verified_count", "staff_id", "policy_id"],
+    text: `
+UPDATE orders
+SET order_status = 'RECEIVED',
+    verified_count = $2,
+    received_at = now(),
+    received_by = $3,
+    policy_id = $4
+WHERE order_id = $1
+  AND order_status = 'SUBMITTED'
+RETURNING order_id`,
+  },
+
+  W21: {
+    id: "W21",
+    title: "Create an unpaid fine",
+    purpose:
+      "Stores a positive fine calculated from the verified count and effective policy. Called inside the receipt transaction only when the amount is greater than zero.",
+    params: ["order_id", "fine_amount"],
+    text: `
+INSERT INTO fines (order_id, fine_amount, fine_status)
+VALUES ($1, $2, 'UNPAID')
+RETURNING order_id`,
+  },
+
+  W22: {
+    id: "W22",
+    title: "Verify a bag tag",
+    purpose:
+      "Records the first in-person verification time and the authenticated staff member. Does not overwrite an existing verification.",
+    params: ["student_id", "staff_id"],
+    text: `
+UPDATE students
+SET bag_verified_at = now(),
+    bag_verified_by = $2
+WHERE student_id = $1
+  AND is_active
+  AND bag_verified_at IS NULL
+RETURNING student_id, bag_verified_at`,
+  },
+
   // ---- Dhruv: R30-R39, W30-W39 (fines and pickup) ----
   R30: {
     id: "R30",
