@@ -25,10 +25,13 @@ export default function SubmitForm({ hasActiveOrder }) {
       )}
 
       {hasActiveOrder ? (
-        <Alert>
-          You already have an active order. Wait until it is collected before
-          submitting another.
-        </Alert>
+        // Right after a successful submit, the green message is enough.
+        !state.success && (
+          <Alert>
+            You already have an active order. Wait until it is collected before
+            submitting another.
+          </Alert>
+        )
       ) : (
         <form action={formAction} className="mt-3 space-y-3">
           <div>
