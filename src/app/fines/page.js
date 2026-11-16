@@ -5,12 +5,12 @@ import { run } from "@/lib/db";
 import {
   Card,
   BagTag,
-  Button,
   Alert,
   money,
   when,
 } from "@/components/ui";
 import { AppPage } from "@/components/app-page";
+import SubmitButton from "./submit-button";
 
 import {
   markReady,
@@ -99,9 +99,9 @@ async function Fines({ searchParams }) {
                     value={order.order_id}
                   />
 
-                  <Button type="submit">
+                  <SubmitButton>
                     Mark ready
-                  </Button>
+                  </SubmitButton>
                 </form>
               </li>
             ))}
@@ -149,9 +149,9 @@ async function Fines({ searchParams }) {
                     value={order.order_id}
                   />
 
-                  <Button type="submit">
+                  <SubmitButton>
                     Collected
-                  </Button>
+                  </SubmitButton>
                 </form>
               </li>
             ))}
@@ -205,9 +205,9 @@ async function Fines({ searchParams }) {
                       value={fine.order_id}
                     />
 
-                    <Button type="submit">
+                    <SubmitButton>
                       Paid
-                    </Button>
+                    </SubmitButton>
                   </form>
 
                   <form
@@ -230,12 +230,9 @@ async function Fines({ searchParams }) {
                       className="min-w-0 flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
                     />
 
-                    <Button
-                      type="submit"
-                      variant="secondary"
-                    >
+                    <SubmitButton variant="secondary">
                       Waive
-                    </Button>
+                    </SubmitButton>
                   </form>
                 </div>
               </li>
