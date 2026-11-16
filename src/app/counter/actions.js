@@ -145,6 +145,15 @@ export async function receiveOrder(_previousState, formData) {
       fineAmount: outcome.fineAmount,
     };
   } catch (error) {
+    // 23505 = unique violation. fines_pkey means this order already has a fine,
+    // so trying again will never work: tell staff to get it checked instead.
+    if (error?.code === "23505" && error.constraint_name === "fines_pkey") {
+      console.error("Counter order already has a fine", error);
+      return {
+        error: "This order already has a fine saved, so it was not received. Ask an admin to check this order.",
+        orderId,
+      };
+    }
     console.error("Counter order receipt failed", error);
     return {
       error: "The order could not be received. No changes were saved; please try again.",

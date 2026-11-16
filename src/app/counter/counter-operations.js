@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Alert, BagTag, Button, Card, StatusBadge, when, money } from "@/components/ui";
 import BagLookup from "./bag-lookup";
 import { receiveOrder } from "./actions";
@@ -12,6 +12,8 @@ export default function CounterOperations({ queue }) {
     receiveOrder,
     initialReceiveState,
   );
+  // Remember which order was submitted, so the success message can show its bag tag.
+  const [submittedOrder, setSubmittedOrder] = useState(null);
 
   return (
     <div className="space-y-6">
@@ -20,7 +22,15 @@ export default function CounterOperations({ queue }) {
       {receiveState.error && !receiveState.orderId && <Alert>{receiveState.error}</Alert>}
       {receiveState.success && (
         <Alert kind="success">
-          Order {receiveState.orderId} received · {receiveState.verifiedCount} items counted ·{" "}
+          {submittedOrder ? (
+            <>
+              <BagTag prefix={submittedOrder.bag_prefix} number={submittedOrder.bag_number} />{" "}
+              {submittedOrder.full_name}
+            </>
+          ) : (
+            "Order"
+          )}{" "}
+          received · {receiveState.verifiedCount} items counted ·{" "}
           {receiveState.fineAmount > 0
             ? `Fee ${money(receiveState.fineAmount)}`
             : "No fee due"}
@@ -68,6 +78,7 @@ export default function CounterOperations({ queue }) {
                     order={order}
                     action={receiveAction}
                     pending={receiving}
+                    onSubmit={() => setSubmittedOrder(order)}
                     rowState={receiveState.orderId === order.order_id ? receiveState : null}
                   />
                 </div>
@@ -80,14 +91,14 @@ export default function CounterOperations({ queue }) {
   );
 }
 
-function ReceiveForm({ order, action, pending, rowState }) {
+function ReceiveForm({ order, action, pending, onSubmit, rowState }) {
   // Start empty so staff type the real count. If saving fails, keep what they typed.
   const rowError = rowState?.error ?? null;
   const countValue = rowError ? rowState.verifiedCount ?? "" : "";
   const errorId = `verified-count-error-${order.order_id}`;
 
   return (
-    <form action={action} className="w-full rounded-xl bg-zinc-50 p-3 dark:bg-zinc-900/70 lg:w-[22rem]">
+    <form action={action} onSubmit={onSubmit} className="w-full rounded-xl bg-zinc-50 p-3 dark:bg-zinc-900/70 lg:w-[22rem]">
       <input type="hidden" name="order_id" value={order.order_id} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="min-w-0 flex-1">
