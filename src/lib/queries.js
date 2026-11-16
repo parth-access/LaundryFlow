@@ -168,12 +168,13 @@ RETURNING order_id, submitted_at`,
     id: "R20",
     title: "Current fine policy",
     purpose:
-      "Counter receipt: returns the latest fine policy effective on the receipt date.",
+      "Counter receipt: returns the latest fine policy effective on the receipt date. " +
+      "The date is taken in India time, because the database server runs in UTC.",
     params: [],
     text: `
 SELECT policy_id, free_limit, fine_per_extra
 FROM policies
-WHERE effective_from <= CURRENT_DATE
+WHERE effective_from <= (now() AT TIME ZONE 'Asia/Kolkata')::date
 ORDER BY effective_from DESC
 LIMIT 1`,
   },
