@@ -108,3 +108,31 @@ export async function markNotReady(formData) {
 
   await updateOrder("W34", [orderId, staff.staff_id, "Marked ready by mistake"], getPage(formData), "not-ready");
 }
+
+// "Mark selected ready" on the wash tab: every ticked bag in one statement (W35).
+export async function markManyReady(formData) {
+  await requireAccess(["staff"]);
+
+  const ids = formData.getAll("order_ids").map((value) => getOrderId(new Map([["order_id", value]])));
+
+  if (ids.length === 0) {
+    redirect("/fines/wash?error=none-selected");
+  }
+  if (ids.length > 100 || ids.some((id) => id === null)) {
+    redirect("/fines/wash?error=invalid-order");
+  }
+
+  let rows;
+  try {
+    rows = await run("W35", [ids]);
+  } catch (error) {
+    console.error("LaundryFlow W35 failed", error);
+    redirect("/fines/wash?error=save-failed");
+  }
+
+  if (rows.length === 0) {
+    redirect("/fines/wash?error=already-updated");
+  }
+
+  redirect(`/fines/wash?done=many-ready&n=${rows.length}`);
+}
