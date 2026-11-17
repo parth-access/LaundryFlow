@@ -296,10 +296,12 @@ ORDER BY o.received_at`,
     id: "R32",
     title: "Orders waiting for pickup",
     purpose:
-      "Lists all ready orders waiting to be collected by students, with their bag tag and ready time.",
+      "Lists all ready orders waiting to be collected by students, with their bag tag and ready time. " +
+      "days_waiting counts whole days since the bag was marked ready, in India time, so staff can chase old bags.",
     params: [],
     text: `
 SELECT o.order_id, o.verified_count, o.ready_at,
+       ((now() AT TIME ZONE 'Asia/Kolkata')::date - (o.ready_at AT TIME ZONE 'Asia/Kolkata')::date) AS days_waiting,
        s.bag_prefix, s.bag_number, s.full_name
 FROM orders o
 JOIN students s ON s.student_id = o.student_id
