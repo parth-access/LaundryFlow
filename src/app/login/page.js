@@ -14,11 +14,11 @@ export default function LoginPage({ searchParams }) {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16">
       <Link href="/" className="text-xl font-semibold tracking-tight">
-        Laundry<span className="text-teal-600 dark:text-teal-400">Flow</span>
+        Laundry<span className="text-teal-600">Flow</span>
       </Link>
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm">
         <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <p className="text-zinc-600">
           Students sign in with their college Google account. Laundry staff use the Google account an admin has added.
         </p>
 
@@ -30,7 +30,7 @@ export default function LoginPage({ searchParams }) {
         <form action={signInWithGoogle}>
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50"
           >
             <span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white">
               G
@@ -48,7 +48,7 @@ async function ErrorMessage({ searchParams }) {
   const message = typeof error === "string" ? MESSAGES[error] : undefined;
   if (!message) return null;
   return (
-    <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-left text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+    <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-left text-sm text-red-800">
       {message}
     </p>
   );

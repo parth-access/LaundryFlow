@@ -34,7 +34,7 @@ async function Admin() {
 
       <Card>
         <h2 className="mb-3 text-lg font-medium">Staff ({staffList.length})</h2>
-        <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+        <ul className="divide-y divide-zinc-200">
           {staffList.map((s) => (
             <li key={s.staff_id} className="flex items-center justify-between py-2">
               <span>

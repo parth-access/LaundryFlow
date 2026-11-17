@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { registerStudent } from "./actions";
 
 const input =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white";
+  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900";
 
 export default function RegisterForm({ email, suggestedName }) {
   const [state, action, pending] = useActionState(registerStudent, null);
@@ -13,7 +13,7 @@ export default function RegisterForm({ email, suggestedName }) {
   return (
     <form action={action} className="space-y-4 text-left">
       {state?.error && (
-        <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+        <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800">
           {state.error}
         </p>
       )}

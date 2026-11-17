@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
+/* LaundryFlow palette, matched to Rishiverse (the college LMS):
+   warm off-white page, white cards, peach pill buttons with slate text,
+   Rishihood red-orange as the accent. Light theme only, like Rishiverse. */
 :root {
-  --background: #f8fafc;
-  --foreground: #171717;
+  --background: #fcfbfa;
+  --foreground: #0a0a0a;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-peach: #f8ddca;        /* primary buttons, highlights */
+  --color-peach-hover: #f2ccb0;
+  --color-peach-soft: #fdf1e8;   /* tinted panels, badges */
+  --color-ink: #364153;          /* text on peach, headings accents */
+  --color-brand: #c2412d;        /* Rishihood red-orange: logo, links, key numbers */
+  --color-muted: #7e7a79;        /* secondary text */
+  --color-line: #e5e5e5;         /* card borders, dividers */
+  --color-field: #d1d5dc;        /* input borders */
+
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

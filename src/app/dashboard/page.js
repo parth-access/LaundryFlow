@@ -29,12 +29,12 @@ function AreaCard({ href, title, text, stat, statLabel }) {
           </div>
           {stat !== undefined && (
             <div className="text-right">
-              <p className="text-3xl font-semibold text-teal-600 dark:text-teal-400">{stat}</p>
+              <p className="text-3xl font-semibold text-teal-600">{stat}</p>
               <p className="text-xs text-zinc-500">{statLabel}</p>
             </div>
           )}
         </div>
-        <p className="mt-4 text-sm font-medium text-teal-600 group-hover:underline dark:text-teal-400">Open &rarr;</p>
+        <p className="mt-4 text-sm font-medium text-teal-600 group-hover:underline">Open &rarr;</p>
       </Card>
     </Link>
   );
@@ -82,7 +82,7 @@ async function Dashboard() {
   return (
     <div className="space-y-6">
       <p className="text-zinc-500">
-        Signed in as <span className="font-medium text-zinc-900 dark:text-zinc-100">{access.staff.full_name}</span>{" "}
+        Signed in as <span className="font-medium text-zinc-900">{access.staff.full_name}</span>{" "}
         ({access.staff.role.toLowerCase()})
       </p>
       <div className="grid gap-4 sm:grid-cols-2">

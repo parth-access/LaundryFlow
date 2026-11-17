@@ -54,7 +54,7 @@ async function StudentHome() {
               {orders.map((o) => (
                 <tr
                   key={o.order_id}
-                  className="border-t border-zinc-200 dark:border-zinc-800"
+                  className="border-t border-zinc-200"
                 >
                   <td className="py-2">{when(o.submitted_at)}</td>
                   <td>

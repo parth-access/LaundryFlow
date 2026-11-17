@@ -9,7 +9,7 @@ export function Page({ title, subtitle, back = "/dashboard", children }) {
     <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
       <div className="space-y-1">
         {back && (
-          <Link href={back} className="text-sm text-zinc-500 hover:text-teal-600 dark:hover:text-teal-400">
+          <Link href={back} className="text-sm text-zinc-500 hover:text-teal-600">
             &larr; Back
           </Link>
         )}
@@ -24,7 +24,7 @@ export function Page({ title, subtitle, back = "/dashboard", children }) {
 export function Card({ children, className = "" }) {
   return (
     <section
-      className={`rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 ${className}`}
+      className={`rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm ${className}`}
     >
       {children}
     </section>
@@ -33,7 +33,7 @@ export function Card({ children, className = "" }) {
 
 const buttonStyles = {
   primary: "bg-teal-600 text-white hover:bg-teal-700 focus-visible:outline-teal-600",
-  secondary: "border border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900",
+  secondary: "border border-zinc-300 hover:bg-zinc-100",
   danger: "bg-red-600 text-white hover:bg-red-500",
 };
 
@@ -48,19 +48,19 @@ export function Button({ variant = "primary", className = "", ...props }) {
 
 export function BagTag({ prefix, number }) {
   return (
-    <span className="rounded-md bg-zinc-100 px-2 py-0.5 font-mono font-semibold dark:bg-zinc-800">
+    <span className="rounded-md bg-zinc-100 px-2 py-0.5 font-mono font-semibold">
       {prefix} {number}
     </span>
   );
 }
 
 const statusColors = {
-  SUBMITTED: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200",
-  RECEIVED: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200",
-  READY: "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200",
-  COLLECTED: "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-  CANCELLED: "bg-zinc-200 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
-  DISPUTED: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200",
+  SUBMITTED: "bg-blue-100 text-blue-800",
+  RECEIVED: "bg-amber-100 text-amber-800",
+  READY: "bg-green-100 text-green-800",
+  COLLECTED: "bg-zinc-200 text-zinc-700",
+  CANCELLED: "bg-zinc-200 text-zinc-500",
+  DISPUTED: "bg-red-100 text-red-800",
 };
 
 export function StatusBadge({ status }) {
@@ -74,8 +74,8 @@ export function StatusBadge({ status }) {
 export function Alert({ children, kind = "error" }) {
   const styles =
     kind === "error"
-      ? "border-red-300 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200"
-      : "border-green-300 bg-green-50 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200";
+      ? "border-red-300 bg-red-50 text-red-800"
+      : "border-green-300 bg-green-50 text-green-800";
   return (
     <p role="alert" className={`rounded-lg border p-3 text-sm ${styles}`}>
       {children}

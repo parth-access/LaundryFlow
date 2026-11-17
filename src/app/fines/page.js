@@ -69,7 +69,7 @@ async function Fines({ searchParams }) {
             No orders waiting to be washed.
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+          <ul className="divide-y divide-zinc-200">
             {received.map((order) => (
               <li
                 key={order.order_id}
@@ -119,7 +119,7 @@ async function Fines({ searchParams }) {
             No orders waiting for pickup.
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+          <ul className="divide-y divide-zinc-200">
             {ready.map((order) => (
               <li
                 key={order.order_id}
@@ -169,7 +169,7 @@ async function Fines({ searchParams }) {
             No unpaid fines.
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+          <ul className="divide-y divide-zinc-200">
             {unpaid.map((fine) => (
               <li
                 key={fine.order_id}
@@ -227,7 +227,7 @@ async function Fines({ searchParams }) {
                       maxLength={200}
                       rows={1}
                       placeholder="Reason for waiving the fine..."
-                      className="min-w-0 flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                      className="min-w-0 flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm"
                     />
 
                     <SubmitButton variant="secondary">
