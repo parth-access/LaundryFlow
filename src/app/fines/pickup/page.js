@@ -6,7 +6,7 @@ import { AppPage } from "@/components/app-page";
 import { BagTag, EmptyState, List, ListRow, when } from "@/components/ui";
 import FinesFrame from "../frame";
 import SubmitButton from "../submit-button";
-import { markCollected } from "../actions";
+import { markCollected, markNotReady } from "../actions";
 
 export const metadata = { title: "For pickup | LaundryFlow" };
 
@@ -43,11 +43,18 @@ async function Pickup({ searchParams }) {
               <ListRow
                 key={o.order_id}
                 aside={
-                  <form action={markCollected}>
-                    <input type="hidden" name="order_id" value={o.order_id} />
-                    <input type="hidden" name="return_to" value="/fines/pickup" />
-                    <SubmitButton>Collected</SubmitButton>
-                  </form>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <form action={markNotReady}>
+                      <input type="hidden" name="order_id" value={o.order_id} />
+                      <input type="hidden" name="return_to" value="/fines/pickup" />
+                      <SubmitButton variant="secondary">Not ready yet</SubmitButton>
+                    </form>
+                    <form action={markCollected}>
+                      <input type="hidden" name="order_id" value={o.order_id} />
+                      <input type="hidden" name="return_to" value="/fines/pickup" />
+                      <SubmitButton>Collected</SubmitButton>
+                    </form>
+                  </div>
                 }
               >
                 <div className="flex flex-wrap items-center gap-2">
