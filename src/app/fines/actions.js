@@ -95,3 +95,16 @@ export async function waiveFine(formData) {
 
   await updateOrder("W33", [orderId, staff.staff_id, reason], getPage(formData), "waived");
 }
+
+// Undo a "Mark ready" pressed by mistake. W34 also writes the reason to order_changes.
+export async function markNotReady(formData) {
+  const { staff } = await requireAccess(["staff"]);
+
+  const orderId = getOrderId(formData);
+
+  if (!orderId) {
+    redirect(`${getPage(formData)}?error=invalid-order`);
+  }
+
+  await updateOrder("W34", [orderId, staff.staff_id, "Marked ready by mistake"], getPage(formData), "not-ready");
+}
