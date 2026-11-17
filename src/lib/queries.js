@@ -389,8 +389,68 @@ ORDER BY is_active DESC, full_name`,
       "so each order keeps the rule it was counted under (orders.policy_id).",
     params: [],
     text: `
-SELECT policy_id, effective_from, free_limit, fine_per_extra
+SELECT policy_id, effective_from::text AS effective_from, free_limit, fine_per_extra
 FROM policies
 ORDER BY effective_from DESC`,
+  },
+
+  R42: {
+    id: "R42",
+    title: "Numbers at a glance",
+    purpose:
+      "Admin page: bags handed in today (India time), bags waiting to be counted, and the total of unpaid fines. " +
+      "One row, three scalar subqueries.",
+    params: [],
+    text: `
+SELECT
+  (SELECT count(*)::int FROM orders
+     WHERE (submitted_at AT TIME ZONE 'Asia/Kolkata')::date = (now() AT TIME ZONE 'Asia/Kolkata')::date) AS orders_today,
+  (SELECT count(*)::int FROM orders WHERE order_status = 'SUBMITTED') AS waiting,
+  (SELECT count(*)::int FROM fines WHERE fine_status = 'UNPAID') AS unpaid_count,
+  (SELECT coalesce(sum(fine_amount), 0) FROM fines WHERE fine_status = 'UNPAID') AS unpaid_total`,
+  },
+
+  W40: {
+    id: "W40",
+    title: "Add staff",
+    purpose:
+      "Admin adds a laundry staff member by their Google email. The email is stored lowercase (the table CHECK enforces it). " +
+      "ON CONFLICT DO NOTHING: an email already on the list returns no row, so the page can say so.",
+    params: ["full_name", "email", "role"],
+    text: `
+INSERT INTO staff (full_name, email, role)
+VALUES ($1, lower($2), $3)
+ON CONFLICT (email) DO NOTHING
+RETURNING staff_id`,
+  },
+
+  W41: {
+    id: "W41",
+    title: "Deactivate or reactivate staff",
+    purpose:
+      "Turns a staff account off or back on. Accounts are never deleted, because collected orders point at the staff member. " +
+      "The WHERE stops an admin from switching off their own account ($3 is the admin's own staff_id).",
+    params: ["staff_id", "is_active", "own_staff_id"],
+    text: `
+UPDATE staff
+SET is_active = $2
+WHERE staff_id = $1
+  AND staff_id <> $3
+RETURNING staff_id`,
+  },
+
+  W42: {
+    id: "W42",
+    title: "New fine policy",
+    purpose:
+      "Adds a new fine rule from a date onwards. Old rules are never edited, so past orders keep the rule they were counted under. " +
+      "The date cannot be in the past (India time), and only one rule per date (UNIQUE).",
+    params: ["effective_from", "free_limit", "fine_per_extra"],
+    text: `
+INSERT INTO policies (effective_from, free_limit, fine_per_extra)
+SELECT $1::date, $2, $3
+WHERE $1::date >= (now() AT TIME ZONE 'Asia/Kolkata')::date
+ON CONFLICT (effective_from) DO NOTHING
+RETURNING policy_id`,
   },
 };
