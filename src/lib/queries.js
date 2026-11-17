@@ -391,6 +391,31 @@ WHERE order_id = $1
 RETURNING order_id`,
   },
 
+  W34: {
+    id: "W34",
+    title: "Undo mark ready",
+    purpose:
+      "Moves a READY order back to RECEIVED when staff pressed Mark ready by mistake, and records the change in " +
+      "order_changes in the same statement (a CTE), so the undo and its audit row succeed or fail together. " +
+      "Only READY orders qualify, so a collected bag can never be undone. change_no is the next number for that order.",
+    params: ["order_id", "staff_id", "reason"],
+    text: `
+WITH undone AS (
+  UPDATE orders
+  SET order_status = 'RECEIVED',
+      ready_at = NULL
+  WHERE order_id = $1
+    AND order_status = 'READY'
+  RETURNING order_id
+)
+INSERT INTO order_changes (order_id, change_no, changed_by, field_changed, old_value, new_value, reason)
+SELECT u.order_id,
+       coalesce((SELECT max(c.change_no) FROM order_changes c WHERE c.order_id = u.order_id), 0) + 1,
+       $2, 'order_status', 'READY', 'RECEIVED', $3
+FROM undone u
+RETURNING order_id`,
+  },
+
   // ---- Parth: R40-R49, W40-W49 (admin) ----
   R40: {
     id: "R40",
