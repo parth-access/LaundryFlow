@@ -1,4 +1,4 @@
-// OWNER: Dhruv. Shared frame for the three Wash & fines pages: tabs with counts,
+// OWNER: Dhruv. Shared frame for the Wash & fines pages: tabs with counts,
 // plus the message after an action (done / error).
 import { run } from "@/lib/db";
 import { Alert, Tabs } from "@/components/ui";
@@ -17,15 +17,26 @@ const doneMessages = {
 };
 
 export default async function FinesFrame({ current, searchParams, children }) {
-  const [wash, pickup, unpaid] = await Promise.all([run("R31"), run("R32"), run("R30")]);
+  const [wash, pickup, unpaid, history] = await Promise.all([
+    run("R31"),
+    run("R32"),
+    run("R30"),
+    current === "/fines/history" ? run("R33") : [], // only load history when that tab is open
+  ]);
   const { error, done } = await searchParams;
 
   const tabs = [
     { href: "/fines/wash", label: "To wash", count: wash.length },
     { href: "/fines/pickup", label: "For pickup", count: pickup.length },
     { href: "/fines/unpaid", label: "Unpaid fines", count: unpaid.length },
+    { href: "/fines/history", label: "History" },
   ];
-  const rows = { "/fines/wash": wash, "/fines/pickup": pickup, "/fines/unpaid": unpaid }[current];
+  const rows = {
+    "/fines/wash": wash,
+    "/fines/pickup": pickup,
+    "/fines/unpaid": unpaid,
+    "/fines/history": history,
+  }[current];
 
   return (
     <>
