@@ -410,6 +410,23 @@ WHERE order_id = $1
 RETURNING order_id`,
   },
 
+  W35: {
+    id: "W35",
+    title: "Mark several orders ready",
+    purpose:
+      "Marks every listed order READY in one statement, when a whole machine load finishes. " +
+      "One UPDATE is atomic, so either all qualifying bags change or none do. " +
+      "Bags no longer RECEIVED (someone else already moved them) are skipped; RETURNING says which changed.",
+    params: ["order_ids"],
+    text: `
+UPDATE orders
+SET order_status = 'READY',
+    ready_at = now()
+WHERE order_id = ANY($1::int[])
+  AND order_status = 'RECEIVED'
+RETURNING order_id`,
+  },
+
   W34: {
     id: "W34",
     title: "Undo mark ready",
