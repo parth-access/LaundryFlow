@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAccess } from "@/lib/auth";
 import { getSql, run } from "@/lib/db";
 import { QUERIES } from "@/lib/queries";
@@ -106,6 +107,7 @@ export async function receiveOrder(_previousState, formData) {
     };
   }
 
+  let received = false;
   try {
     const outcome = await getSql().begin(async (tx) => {
       const policies = await runInTransaction(tx, "R20");
@@ -137,13 +139,7 @@ export async function receiveOrder(_previousState, formData) {
     }
 
     revalidatePath("/counter");
-    return {
-      error: null,
-      success: true,
-      orderId,
-      verifiedCount,
-      fineAmount: outcome.fineAmount,
-    };
+    received = true;
   } catch (error) {
     // 23505 = unique violation. fines_pkey means this order already has a fine,
     // so trying again will never work: tell staff to get it checked instead.
@@ -161,4 +157,8 @@ export async function receiveOrder(_previousState, formData) {
       verifiedCount: rawCount,
     };
   }
+
+  // Saved: back to the queue for the next bag. redirect() works by throwing,
+  // so it must stay outside the try/catch above.
+  if (received) redirect("/counter?received=1");
 }

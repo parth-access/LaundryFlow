@@ -1,134 +1,110 @@
 "use client";
 
+// OWNER: Tanishq. The receive panel on the "Count bag" page: type the real count,
+// see the fine before saving, receive the bag. Verifies a new bag tag too.
 import { useActionState, useState } from "react";
-import { Alert, BagTag, Button, Card, StatusBadge, when, money } from "@/components/ui";
-import BagLookup from "./bag-lookup";
-import { receiveOrder } from "./actions";
+import { Alert, Button, Card, money } from "@/components/ui";
+import { calculateFine } from "@/lib/fines";
+import { receiveOrder, verifyBag } from "./actions";
 
-const initialReceiveState = { error: null, success: false };
+export default function ReceivePanel({ order, policy }) {
+  const [count, setCount] = useState("");
+  const [state, receiveAction, receiving] = useActionState(receiveOrder, { error: null, success: false });
+  const [verifyState, verifyAction, verifying] = useActionState(verifyBag, { error: null, verified: false });
 
-export default function CounterOperations({ queue }) {
-  const [receiveState, receiveAction, receiving] = useActionState(
-    receiveOrder,
-    initialReceiveState,
-  );
-  // Remember which order was submitted, so the success message can show its bag tag.
-  const [submittedOrder, setSubmittedOrder] = useState(null);
+  const valid = /^[0-9]+$/.test(count) && Number(count) <= 100;
+  const n = valid ? Number(count) : null;
+  const fine = n !== null && policy ? calculateFine(n, policy) : null;
+  const extra = n !== null && policy ? Math.max(0, n - policy.free_limit) : 0;
+  const verified = order.bag_verified || verifyState.verified;
 
   return (
-    <div className="space-y-6">
-      <BagLookup />
-
-      {receiveState.error && !receiveState.orderId && <Alert>{receiveState.error}</Alert>}
-      {receiveState.success && (
-        <Alert kind="success">
-          {submittedOrder ? (
-            <>
-              <BagTag prefix={submittedOrder.bag_prefix} number={submittedOrder.bag_number} />{" "}
-              {submittedOrder.full_name}
-            </>
-          ) : (
-            "Order"
-          )}{" "}
-          received · {receiveState.verifiedCount} items counted ·{" "}
-          {receiveState.fineAmount > 0
-            ? `Fee ${money(receiveState.fineAmount)}`
-            : "No fee due"}
-        </Alert>
-      )}
-
-      <Card className="overflow-hidden p-0">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4">
+    <>
+      {!verified && (
+        <Card className="flex flex-wrap items-center justify-between gap-4 border-amber-200 bg-amber-50/60">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-              Incoming orders
-            </p>
-            <h2 className="mt-1 text-lg font-semibold">Waiting to be counted</h2>
+            <p className="font-medium">First drop-off with this tag</p>
+            <p className="text-sm text-muted">Check the tag on the bag matches before you count.</p>
           </div>
-          <span className="inline-flex min-w-9 items-center justify-center rounded-full bg-zinc-100 px-3 py-1 text-sm font-semibold tabular-nums">
-            {queue.length}
-          </span>
-        </div>
-
-        {queue.length === 0 ? (
-          <div className="px-5 py-10 text-center">
-            <div aria-hidden className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-peach-soft text-lg text-ink">
-              ✓
+          <form action={verifyAction}>
+            <input type="hidden" name="student_id" value={order.student_id} />
+            <Button type="submit" variant="secondary" disabled={verifying}>
+              {verifying ? "Saving…" : "Tag matches"}
+            </Button>
+          </form>
+          {verifyState.error && (
+            <div className="w-full">
+              <Alert>{verifyState.error}</Alert>
             </div>
-            <p className="font-medium">You’re all caught up</p>
-            <p className="mt-1 text-sm text-muted">New submitted orders will appear here.</p>
-          </div>
-        ) : (
-          <ul className="divide-y divide-line">
-            {queue.map((order) => (
-              <li key={order.order_id} className="px-5 py-5 sm:px-6">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <BagTag prefix={order.bag_prefix} number={order.bag_number} />
-                      <span className="font-semibold">{order.full_name}</span>
-                      <StatusBadge status="SUBMITTED" />
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
-                      <span>Declared {order.declared_count} items</span>
-                      <span>Submitted {when(order.submitted_at)}</span>
-                    </div>
-                  </div>
-                  <ReceiveForm
-                    order={order}
-                    action={receiveAction}
-                    pending={receiving}
-                    onSubmit={() => setSubmittedOrder(order)}
-                    rowState={receiveState.orderId === order.order_id ? receiveState : null}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
-    </div>
-  );
-}
-
-function ReceiveForm({ order, action, pending, onSubmit, rowState }) {
-  // Start empty so staff type the real count. If saving fails, keep what they typed.
-  const rowError = rowState?.error ?? null;
-  const countValue = rowError ? rowState.verifiedCount ?? "" : "";
-  const errorId = `verified-count-error-${order.order_id}`;
-
-  return (
-    <form action={action} onSubmit={onSubmit} className="w-full rounded-xl bg-zinc-50 p-3 lg:w-[22rem]">
-      <input type="hidden" name="order_id" value={order.order_id} />
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="min-w-0 flex-1">
-          <label htmlFor={`verified-count-${order.order_id}`} className="mb-1.5 block text-xs font-semibold text-muted">
-            Verified count
-          </label>
-          <input
-            id={`verified-count-${order.order_id}`}
-            name="verified_count"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            max="100"
-            step="1"
-            required
-            defaultValue={countValue}
-            aria-describedby={rowError ? errorId : undefined}
-            className="w-full rounded-lg border border-field bg-white px-3 py-2.5 text-base tabular-nums outline-none transition focus:border-ink focus:ring-2 focus:ring-peach"
-          />
-        </div>
-        <Button type="submit" disabled={pending} className="min-h-11 w-full sm:w-auto">
-          {pending ? "Saving…" : "Receive order"}
-        </Button>
-      </div>
-      {rowError && (
-        <p id={errorId} role="alert" className="mt-2 text-sm text-red-700">
-          {rowError}
-        </p>
+          )}
+        </Card>
       )}
-      <p className="mt-2 text-xs text-muted">Fee is calculated from the active policy after the count is saved.</p>
-    </form>
+
+      <Card>
+        <form action={receiveAction} className="space-y-6">
+          <input type="hidden" name="order_id" value={order.order_id} />
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <p className="text-sm text-muted">Student says</p>
+              <p className="mt-1 font-display text-5xl font-semibold tabular-nums text-muted">{order.declared_count}</p>
+            </div>
+            <div>
+              <label htmlFor="verified_count" className="text-sm text-muted">
+                You counted
+              </label>
+              <input
+                id="verified_count"
+                name="verified_count"
+                type="number"
+                inputMode="numeric"
+                min="0"
+                max="100"
+                step="1"
+                required
+                autoFocus
+                value={count}
+                onChange={(e) => setCount(e.target.value)}
+                placeholder="0"
+                className="mt-1 w-full max-w-40 rounded-2xl border border-field bg-white px-4 py-2 font-display text-5xl font-semibold tabular-nums outline-none focus:border-ink focus:ring-4 focus:ring-peach"
+              />
+            </div>
+          </div>
+
+          <div className={`rounded-2xl px-5 py-4 ${fine ? "bg-red-50 text-red-900" : "bg-peach-soft text-ink"}`} aria-live="polite">
+            {!policy ? (
+              <p>No fine rule is set up. Ask an admin before receiving.</p>
+            ) : n === null ? (
+              <p>
+                {policy.free_limit} clothes are free, then {money(policy.fine_per_extra)} for each extra one.
+              </p>
+            ) : fine > 0 ? (
+              <p>
+                <span className="font-display text-2xl font-semibold">{money(fine)} fine</span>
+                <span className="ml-2 text-sm">
+                  {extra} over the free {policy.free_limit}, at {money(policy.fine_per_extra)} each
+                </span>
+              </p>
+            ) : (
+              <p>
+                <span className="font-display text-2xl font-semibold">No fine</span>
+                <span className="ml-2 text-sm">within the free {policy.free_limit}</span>
+              </p>
+            )}
+            {n !== null && n !== order.declared_count && (
+              <p className="mt-1 text-sm">
+                {n > order.declared_count ? `${n - order.declared_count} more` : `${order.declared_count - n} fewer`} than the student said.
+              </p>
+            )}
+          </div>
+
+          {state.error && <Alert>{state.error}</Alert>}
+
+          <Button type="submit" disabled={receiving || !valid || !policy} className="w-full py-3 text-base sm:w-auto">
+            {receiving ? "Saving…" : fine > 0 ? `Receive bag with ${money(fine)} fine` : "Receive bag"}
+          </Button>
+        </form>
+      </Card>
+    </>
   );
 }

@@ -1,43 +1,21 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { Alert, BagTag, Button, Card } from "@/components/ui";
-import { searchBags, verifyBag } from "./actions";
+// OWNER: Tanishq. Type the number on a bag tag; pick B or G; open that student's waiting bag.
+import { useActionState } from "react";
+import { Alert, BagTag, Button, ButtonLink, Card } from "@/components/ui";
+import { searchBags } from "./actions";
 
 const initialSearchState = { searched: false, error: null, results: [] };
-const initialVerifyState = { error: null, studentId: null, verified: false };
 
-export default function BagLookup() {
-  const [searchState, searchAction, searching] = useActionState(
-    searchBags,
-    initialSearchState,
-  );
-  const [selectedId, setSelectedId] = useState(null);
+export default function BagLookup({ waiting }) {
+  const [state, searchAction, searching] = useActionState(searchBags, initialSearchState);
+  const orderFor = (studentId) => waiting.find((w) => w.student_id === studentId)?.order_id;
 
   return (
     <Card>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink">
-            Bag lookup
-          </p>
-          <h2 className="mt-1 text-lg font-semibold">Find the right bag</h2>
-          <p className="mt-1 max-w-xl text-sm text-muted">
-            Search by the number on the tag, then confirm its prefix. A number can belong to more than one bag.
-          </p>
-        </div>
-        <span className="rounded-full bg-peach-soft px-3 py-1 text-xs font-medium text-ink">
-          Search by number
-        </span>
-      </div>
-
-      <form
-        action={searchAction}
-        onSubmit={() => setSelectedId(null)}
-        className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end"
-      >
+      <form action={searchAction} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="min-w-0 flex-1">
-          <label htmlFor="bag_number" className="mb-1.5 block text-sm font-medium">
+          <label htmlFor="bag_number" className="block font-display text-lg font-semibold">
             Bag number
           </label>
           <input
@@ -49,103 +27,55 @@ export default function BagLookup() {
             max="2147483647"
             step="1"
             required
-            placeholder="Enter the number on the tag"
-            className="w-full rounded-lg border border-field bg-white px-3 py-2.5 text-base outline-none transition focus:border-ink focus:ring-2 focus:ring-peach"
+            placeholder="1054"
+            className="mt-2 w-full rounded-2xl border border-field bg-white px-5 py-3 font-display text-2xl font-semibold tabular-nums outline-none focus:border-ink focus:ring-4 focus:ring-peach"
           />
         </div>
-        <Button type="submit" disabled={searching} className="min-h-11 sm:min-w-32">
-          {searching ? "Searching…" : "Find bag"}
+        <Button type="submit" disabled={searching} className="sm:min-w-32 sm:py-3.5">
+          {searching ? "Finding…" : "Find bag"}
         </Button>
       </form>
 
-      {searchState.error && <Alert>{searchState.error}</Alert>}
+      {state.error && (
+        <div className="mt-4">
+          <Alert>{state.error}</Alert>
+        </div>
+      )}
 
-      {searchState.searched && !searchState.error && (
+      {state.searched && !state.error && (
         <div className="mt-5 border-t border-line pt-4">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h3 className="text-sm font-semibold">
-              {searchState.results.length === 0
-                ? "No matching bags"
-                : `${searchState.results.length} matching ${searchState.results.length === 1 ? "bag" : "bags"}`}
-            </h3>
-            {searchState.results.length > 1 && (
-              <span className="text-xs text-muted">Select the exact prefix</span>
-            )}
-          </div>
-
-          {searchState.results.length > 0 && (
-            <ul className="space-y-2">
-              {searchState.results.map((student) => (
-                <BagResult
-                  key={student.student_id}
-                  student={student}
-                  selected={selectedId === student.student_id}
-                  onSelect={() => setSelectedId(student.student_id)}
-                />
-              ))}
-            </ul>
+          {state.results.length === 0 ? (
+            <p className="text-muted">No student has that bag number. Check the tag and try again.</p>
+          ) : (
+            <>
+              {state.results.length > 1 && (
+                <p className="mb-3 text-sm text-muted">Two bags share this number. Match the letter on the tag.</p>
+              )}
+              <ul className="space-y-2">
+                {state.results.map((s) => {
+                  const orderId = orderFor(s.student_id);
+                  return (
+                    <li
+                      key={s.student_id}
+                      className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line px-4 py-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <BagTag prefix={s.bag_prefix} number={s.bag_number} size="md" />
+                        <span className="font-medium">{s.full_name}</span>
+                      </div>
+                      {orderId ? (
+                        <ButtonLink href={`/counter/orders/${orderId}`}>Count this bag</ButtonLink>
+                      ) : (
+                        <span className="text-sm text-muted">No bag handed in</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
           )}
         </div>
       )}
     </Card>
-  );
-}
-
-function BagResult({ student, selected, onSelect }) {
-  const [verifyState, verifyAction, verifying] = useActionState(
-    verifyBag,
-    initialVerifyState,
-  );
-  const verified = Boolean(student.bag_verified_at) ||
-    (verifyState.verified && verifyState.studentId === student.student_id);
-
-  return (
-    <li
-      className={`rounded-xl border p-3 transition-colors ${
-        selected
-          ? "border-peach-hover bg-peach-soft ring-1 ring-peach-hover/60"
-          : "border-line bg-zinc-50/70"
-      }`}
-    >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Button
-          type="button"
-          variant="secondary"
-          aria-pressed={selected}
-          onClick={onSelect}
-          className="flex min-h-12 flex-1 items-center justify-between gap-3 text-left"
-        >
-          <span className="flex min-w-0 items-center gap-3">
-            <BagTag prefix={student.bag_prefix} number={student.bag_number} />
-            <span className="truncate font-medium">{student.full_name}</span>
-          </span>
-          <span className="shrink-0 text-xs text-muted">
-            {selected ? "Selected" : "Select"}
-          </span>
-        </Button>
-
-        {verified ? (
-          <span className="inline-flex items-center gap-2 self-start rounded-full bg-green-100 px-3 py-1.5 text-xs font-semibold text-green-800 sm:self-auto">
-            <span aria-hidden className="size-1.5 rounded-full bg-green-600" />
-            Bag verified
-          </span>
-        ) : selected ? (
-          // Show Verify only on the bag staff selected, so the wrong B or G bag is not verified.
-          <form action={verifyAction} className="self-start sm:self-auto">
-            <input type="hidden" name="student_id" value={student.student_id} />
-            <Button type="submit" variant="secondary" disabled={verifying} className="min-h-10 text-sm">
-              {verifying ? "Verifying…" : "Verify bag"}
-            </Button>
-          </form>
-        ) : null}
-      </div>
-
-      {verifyState.error && verifyState.studentId === student.student_id && (
-        <div className="mt-3"><Alert>{verifyState.error}</Alert></div>
-      )}
-      {verifyState.verified && verifyState.studentId === student.student_id && (
-        <div className="mt-3"><Alert kind="success">Bag verification saved.</Alert></div>
-      )}
-    </li>
   );
 }
