@@ -329,6 +329,25 @@ ORDER BY coalesce(f.fine_paid_at, o.received_at) DESC
 LIMIT 50`,
   },
 
+  R34: {
+    id: "R34",
+    title: "Find a bag waiting for pickup",
+    purpose:
+      "Pickup search: ready bags with this bag number, optionally only B or G. " +
+      "Used when a student walks up and says their number, instead of scrolling the whole list.",
+    params: ["bag_number", "bag_prefix_or_null"],
+    text: `
+SELECT o.order_id, o.verified_count, o.ready_at,
+       ((now() AT TIME ZONE 'Asia/Kolkata')::date - (o.ready_at AT TIME ZONE 'Asia/Kolkata')::date) AS days_waiting,
+       s.bag_prefix, s.bag_number, s.full_name
+FROM orders o
+JOIN students s ON s.student_id = o.student_id
+WHERE o.order_status = 'READY'
+  AND s.bag_number = $1
+  AND ($2::char(1) IS NULL OR s.bag_prefix = $2)
+ORDER BY o.ready_at`,
+  },
+
   W30: {
     id: "W30",
     title: "Mark order ready",
