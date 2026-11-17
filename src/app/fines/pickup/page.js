@@ -36,6 +36,8 @@ async function Pickup({ searchParams }) {
         orders.length === 0 ? (
           <EmptyState title="No bags waiting for pickup">Bags appear here once they are marked ready.</EmptyState>
         ) : (
+          <>
+          <OverdueNote count={orders.filter((o) => o.days_waiting >= OVERDUE_DAYS).length} />
           <List>
             {orders.map((o) => (
               <ListRow
@@ -62,8 +64,18 @@ async function Pickup({ searchParams }) {
               </ListRow>
             ))}
           </List>
+          </>
         )
       }
     </FinesFrame>
+  );
+}
+
+function OverdueNote({ count }) {
+  if (count === 0) return null;
+  return (
+    <p className="rounded-xl bg-peach-soft px-4 py-3 text-sm">
+      {count === 1 ? "1 bag has" : `${count} bags have`} waited {OVERDUE_DAYS} days or more. Oldest are at the top.
+    </p>
   );
 }
