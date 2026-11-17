@@ -1,3 +1,4 @@
+import "@fontsource-variable/bricolage-grotesque";
 import "./globals.css";
 
 export const metadata = {

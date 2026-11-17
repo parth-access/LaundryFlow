@@ -11,6 +11,7 @@
     "test": "node --test src/lib/email-rules.test.js src/lib/access.test.js src/lib/fines.test.js"
   },
   "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
     "next": "16.4.5",
