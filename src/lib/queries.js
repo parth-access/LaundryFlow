@@ -49,7 +49,7 @@ ORDER BY bag_prefix`,
     params: [],
     text: `
 SELECT o.order_id, o.submitted_at, o.declared_count,
-       s.bag_prefix, s.bag_number, s.full_name
+       s.student_id, s.bag_prefix, s.bag_number, s.full_name, s.bag_verified_at
 FROM orders o
 JOIN students s ON s.student_id = o.student_id
 WHERE o.order_status = 'SUBMITTED'
@@ -143,6 +143,25 @@ WHERE student_id = $1
 LIMIT 1`,
   },
 
+  R11: {
+    id: "R11",
+    title: "One of a student's orders, with its fine",
+    purpose:
+      "Order detail page for a student. Filtering on student_id as well as order_id " +
+      "means a student can only ever open their own orders, even by editing the URL.",
+    params: ["order_id", "student_id"],
+    text: `
+SELECT o.order_id, o.order_status, o.declared_count, o.verified_count,
+       o.submitted_at, o.received_at, o.ready_at, o.collected_at,
+       f.fine_amount, f.fine_status, f.fine_paid_at, f.waiver_reason,
+       p.free_limit, p.fine_per_extra
+FROM orders o
+LEFT JOIN fines f    ON f.order_id = o.order_id
+LEFT JOIN policies p ON p.policy_id = o.policy_id
+WHERE o.order_id = $1
+  AND o.student_id = $2`,
+  },
+
   W10: {
     id: "W10",
     title: "Submit order if no active order exists",
@@ -223,6 +242,22 @@ WHERE student_id = $1
   AND is_active
   AND bag_verified_at IS NULL
 RETURNING student_id, bag_verified_at`,
+  },
+
+  R23: {
+    id: "R23",
+    title: "One order with its student, for the receive page",
+    purpose:
+      "The counter opens one order to count it. Includes the student's bag tag and whether " +
+      "the tag has been verified, so staff can verify it on the first drop-off.",
+    params: ["order_id"],
+    text: `
+SELECT o.order_id, o.order_status, o.declared_count, o.verified_count,
+       o.submitted_at, o.received_at, o.ready_at, o.collected_at,
+       s.student_id, s.full_name, s.enrollment_no, s.bag_prefix, s.bag_number, s.bag_verified_at
+FROM orders o
+JOIN students s ON s.student_id = o.student_id
+WHERE o.order_id = $1`,
   },
 
   // ---- Dhruv: R30-R39, W30-W39 (fines and pickup) ----
