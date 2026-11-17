@@ -11,6 +11,7 @@ const errorMessages = {
 };
 const doneMessages = {
   ready: "Marked ready. The student can see it is ready to collect.",
+  "not-ready": "Moved back to To wash. The change is recorded.",
   collected: "Marked collected.",
   paid: "Fine marked paid.",
   waived: "Fine waived.",
