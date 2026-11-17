@@ -35,9 +35,15 @@ The demo data (`scripts/demo-data.sql`) has one order in every state: two waitin
 - Ask Parth for help with the transaction if stuck; `run()` does one query, a transaction needs `getSql().begin(...)`.
 
 ### Dhruv: fines and pickup (`/fines`)
-- [ ] List RECEIVED orders with "Mark ready" (W30) and READY orders with "Collected" (W31, sets collected_at and collected_by).
-- [ ] Unpaid fines list is done (R30). Add "Paid" (W32, sets fine_paid_at) and "Waive" with a reason (W33, sets waived_by and waiver_reason).
-- [ ] DE repo: ER diagram `dbms/02_er_diagram.png` in LaundryFlow_AP_2026 (due Tue 17).
+- [x] List RECEIVED orders with "Mark ready" (W30) and READY orders with "Collected" (W31, sets collected_at and collected_by).
+- [x] Unpaid fines list is done (R30). Add "Paid" (W32, sets fine_paid_at) and "Waive" with a reason (W33, sets waived_by and waiver_reason).
+- [x] DE repo: ER diagram `dbms/02_er_diagram.png` in LaundryFlow_AP_2026 (due Tue 17).
+- [x] Pickup: days waiting per bag, bags waiting 3+ days flagged (R32).
+- [x] Pickup: search one bag by number (R34, `src/lib/bag-search.js` + tests).
+- [x] Undo a wrong "Mark ready", logged in `order_changes` in the same statement (W34).
+- [x] Mark several bags ready at once (W35, one UPDATE with `ANY($1::int[])`).
+- [x] History tab: paid and waived fines with who waived and why (R33).
+- [x] Unpaid fines as a CSV download (`/fines/unpaid/export`, `src/lib/csv.js` + tests).
 
 ### Parth: admin (`/admin`) + setup
 - [ ] Staff list is done (R40). Add staff form (W40) and deactivate / reactivate (W41); an admin cannot deactivate themselves.
