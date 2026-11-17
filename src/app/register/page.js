@@ -1,26 +1,26 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getAccess } from "@/lib/auth";
+import { AuthCard } from "@/components/auth-card";
 import RegisterForm from "./register-form";
 
-export const metadata = { title: "Create your profile | LaundryFlow" };
+export const metadata = { title: "Set up your bag | LaundryFlow" };
 
 export default function RegisterPage() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16">
-      <span className="text-xl font-semibold tracking-tight">
-        Laundry<span className="text-brand">Flow</span>
-      </span>
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-line bg-white p-8 shadow-sm">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Create your profile</h1>
-          <p className="mt-1 text-sm text-muted">One time only. Your bag tag is how the counter finds you.</p>
-        </div>
-        <Suspense fallback={<p className="text-center text-muted">Loading...</p>}>
-          <Form />
-        </Suspense>
-      </div>
-    </main>
+    <AuthCard
+      title="Set up your bag"
+      subtitle="One time only. The counter finds your laundry by this tag."
+      aside={
+        <p className="font-display text-3xl font-semibold leading-tight tracking-tight">
+          B for boys&apos; hostel, G for girls&apos;. The number is the one stitched on your bag.
+        </p>
+      }
+    >
+      <Suspense fallback={<p className="text-muted">Loading…</p>}>
+        <Form />
+      </Suspense>
+    </AuthCard>
   );
 }
 
