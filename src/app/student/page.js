@@ -1,18 +1,19 @@
-// OWNER: Aarabdh. Student side: submit laundry + my orders.
-// Your query ids: R10-R19, W10-W19 (in src/lib/queries.js). See TEAM.md for your task list.
+// OWNER: Aarabdh. Student home: your bag tag, your current laundry, and recent orders.
 import { Suspense } from "react";
+import Link from "next/link";
 import { requireAccess } from "@/lib/auth";
 import { run } from "@/lib/db";
-import { Card, BagTag, StatusBadge, money, when } from "@/components/ui";
 import { AppPage } from "@/components/app-page";
-import SubmitForm from "./submit-form";
+import { BagTag, ButtonLink, Card, EmptyState, List, ListRow, OrderTracker, StatusBadge, money, when } from "@/components/ui";
 
-export const metadata = { title: "My laundry | LaundryFlow" };
+export const metadata = { title: "Home | LaundryFlow" };
+
+const ACTIVE = ["SUBMITTED", "RECEIVED", "READY"];
 
 export default function StudentPage() {
   return (
-    <AppPage title="My laundry">
-      <Suspense fallback={<p className="text-muted">Loading...</p>}>
+    <AppPage title="Your laundry">
+      <Suspense fallback={<p className="text-muted">Loading…</p>}>
         <StudentHome />
       </Suspense>
     </AppPage>
@@ -21,58 +22,77 @@ export default function StudentPage() {
 
 async function StudentHome() {
   const { student } = await requireAccess(["student"]);
-  const orders = await run("R03", [student.student_id]); // working example: history with fines
-  const activeOrders = await run("R10", [student.student_id]);
-  const hasActiveOrder = activeOrders.length > 0;
+  const orders = await run("R03", [student.student_id]);
+  const active = orders.find((o) => ACTIVE.includes(o.order_status));
+  const unpaid = orders.filter((o) => o.fine_status === "UNPAID");
+  const recent = orders.filter((o) => o !== active).slice(0, 3);
 
   return (
     <>
-      <Card>
-        <p>
-          Bag tag{" "}
-          <BagTag prefix={student.bag_prefix} number={student.bag_number} />
+      <Card className="flex flex-wrap items-center justify-between gap-6">
+        <div>
+          <p className="text-sm text-muted">Hi {student.full_name.split(" ")[0]}, this is your bag</p>
+          <div className="mt-3">
+            <BagTag prefix={student.bag_prefix} number={student.bag_number} size="lg" />
+          </div>
+        </div>
+        <p className="max-w-56 text-sm text-muted">
+          {student.bag_verified_at
+            ? "Staff have checked this tag. Show it at the counter."
+            : "Staff will check this tag the first time you hand in laundry."}
         </p>
-        <SubmitForm hasActiveOrder={hasActiveOrder} />
       </Card>
 
-      <Card>
-        <h2 className="mb-3 text-lg font-medium">My orders</h2>
-        {orders.length === 0 ? (
-          <p className="text-muted">No orders yet.</p>
-        ) : (
-          <table className="w-full text-left text-sm">
-            <thead className="text-muted">
-              <tr>
-                <th className="py-1">Submitted</th>
-                <th>Status</th>
-                <th>Declared</th>
-                <th>Counted</th>
-                <th>Fine</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((o) => (
-                <tr
-                  key={o.order_id}
-                  className="border-t border-line"
-                >
-                  <td className="py-2">{when(o.submitted_at)}</td>
-                  <td>
-                    <StatusBadge status={o.order_status} />
-                  </td>
-                  <td>{o.declared_count}</td>
-                  <td>{o.verified_count ?? "-"}</td>
-                  <td>
-                    {o.fine_amount
-                      ? `${money(o.fine_amount)} (${o.fine_status.toLowerCase()})`
-                      : "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </Card>
+      {unpaid.length > 0 && (
+        <Card className="border-red-200 bg-red-50/60">
+          <p className="font-medium text-red-900">
+            You have {money(unpaid.reduce((s, o) => s + Number(o.fine_amount), 0))} in unpaid fines.
+          </p>
+          <p className="mt-1 text-sm text-red-800">Pay at the laundry counter when you collect your bag.</p>
+        </Card>
+      )}
+
+      {active ? (
+        <Card>
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">In progress</h2>
+            <StatusBadge status={active.order_status} />
+          </div>
+          <OrderTracker order={active} />
+          <div className="mt-6 border-t border-line pt-4">
+            <ButtonLink href={`/student/orders/${active.order_id}`} variant="secondary">
+              View this order
+            </ButtonLink>
+          </div>
+        </Card>
+      ) : (
+        <EmptyState title="Nothing at the laundry right now" action={<ButtonLink href="/student/new">Hand in laundry</ButtonLink>}>
+          Tell us how many clothes you are handing in before you drop off your bag.
+        </EmptyState>
+      )}
+
+      {recent.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="text-lg font-semibold">Earlier orders</h2>
+            <Link href="/student/orders" className="text-sm font-medium text-brand hover:underline">
+              See all
+            </Link>
+          </div>
+          <List>
+            {recent.map((o) => (
+              <ListRow
+                key={o.order_id}
+                href={`/student/orders/${o.order_id}`}
+                aside={o.fine_amount ? <span className="text-sm">{money(o.fine_amount)}</span> : null}
+              >
+                <p className="font-medium">{o.verified_count ?? o.declared_count} clothes</p>
+                <p className="text-sm text-muted">Handed in {when(o.submitted_at)}</p>
+              </ListRow>
+            ))}
+          </List>
+        </section>
+      )}
     </>
   );
 }

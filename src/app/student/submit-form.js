@@ -1,68 +1,45 @@
 "use client";
 
+// OWNER: Aarabdh. The "Hand in laundry" form. On success the action opens the new order's page.
 import { useActionState } from "react";
+import { Alert, Button } from "@/components/ui";
 import { submitLaundry } from "./actions";
-import { Button, Alert } from "@/components/ui";
 
-const initialState = {
-  error: null,
-  values: { declared_count: "" },
-  success: false,
-};
+const initialState = { error: null, values: { declared_count: "" } };
 
-export default function SubmitForm({ hasActiveOrder }) {
-  const [state, formAction, pending] = useActionState(
-    submitLaundry,
-    initialState,
-  );
+export default function SubmitForm({ freeLimit }) {
+  const [state, formAction, pending] = useActionState(submitLaundry, initialState);
 
   return (
-    <div className="mt-4">
-      <h2 className="text-lg font-medium">Submit laundry</h2>
+    <form action={formAction} className="space-y-5">
+      <div>
+        <label htmlFor="declared_count" className="block font-display text-lg font-semibold">
+          How many clothes are in your bag?
+        </label>
+        <p className="mt-1 text-sm text-muted">
+          Count every item. {freeLimit ? `The first ${freeLimit} are free; staff recount at the counter.` : "Staff recount at the counter."}
+        </p>
+        <input
+          id="declared_count"
+          name="declared_count"
+          type="number"
+          inputMode="numeric"
+          min="1"
+          max="100"
+          required
+          autoFocus
+          defaultValue={state.values?.declared_count ?? ""}
+          placeholder="0"
+          disabled={pending}
+          className="mt-4 w-40 rounded-2xl border border-field bg-white px-5 py-4 font-display text-4xl font-semibold tabular-nums outline-none focus:border-ink focus:ring-4 focus:ring-peach"
+        />
+      </div>
 
-      {state.success && (
-        <Alert kind="success">Laundry submitted successfully!</Alert>
-      )}
+      {state.error && <Alert>{state.error}</Alert>}
 
-      {hasActiveOrder ? (
-        // Right after a successful submit, the green message is enough.
-        !state.success && (
-          <Alert>
-            You already have an active order. Wait until it is collected before
-            submitting another.
-          </Alert>
-        )
-      ) : (
-        <form action={formAction} className="mt-3 space-y-3">
-          <div>
-            <label
-              htmlFor="declared_count"
-              className="mb-1 block text-sm font-medium"
-            >
-              Number of clothes
-            </label>
-
-            <input
-              id="declared_count"
-              name="declared_count"
-              type="number"
-              min="1"
-              max="100"
-              required
-              defaultValue={state.values?.declared_count ?? ""}
-              placeholder="Enter number of clothes"
-              disabled={pending}
-              className="w-full rounded-lg border border-field bg-transparent px-3 py-2"
-            />
-          </div>
-
-          {state.error && <Alert>{state.error}</Alert>}
-
-          <Button type="submit" disabled={pending}>
-            {pending ? "Submitting..." : "Submit laundry"}
-          </Button>
-        </form>
-      )}
-    </div>
+      <Button type="submit" disabled={pending} className="w-full sm:w-auto">
+        {pending ? "Handing in…" : "Hand in laundry"}
+      </Button>
+    </form>
   );
 }
