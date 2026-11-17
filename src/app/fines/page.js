@@ -34,7 +34,7 @@ export default function FinesPage({ searchParams }) {
   return (
     <AppPage title="Fines and pickup">
       <Suspense
-        fallback={<p className="text-zinc-500">Loading...</p>}
+        fallback={<p className="text-muted">Loading...</p>}
       >
         <Fines searchParams={searchParams} />
       </Suspense>
@@ -65,11 +65,11 @@ async function Fines({ searchParams }) {
         </h2>
 
         {received.length === 0 ? (
-          <p className="text-zinc-500">
+          <p className="text-muted">
             No orders waiting to be washed.
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200">
+          <ul className="divide-y divide-line">
             {received.map((order) => (
               <li
                 key={order.order_id}
@@ -86,7 +86,7 @@ async function Fines({ searchParams }) {
                     </span>
                   </div>
 
-                  <p className="mt-1 text-sm text-zinc-500">
+                  <p className="mt-1 text-sm text-muted">
                     {order.verified_count} clothes · Received{" "}
                     {when(order.received_at)}
                   </p>
@@ -115,11 +115,11 @@ async function Fines({ searchParams }) {
         </h2>
 
         {ready.length === 0 ? (
-          <p className="text-zinc-500">
+          <p className="text-muted">
             No orders waiting for pickup.
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200">
+          <ul className="divide-y divide-line">
             {ready.map((order) => (
               <li
                 key={order.order_id}
@@ -136,7 +136,7 @@ async function Fines({ searchParams }) {
                     </span>
                   </div>
 
-                  <p className="mt-1 text-sm text-zinc-500">
+                  <p className="mt-1 text-sm text-muted">
                     {order.verified_count} clothes · Ready{" "}
                     {when(order.ready_at)}
                   </p>
@@ -165,11 +165,11 @@ async function Fines({ searchParams }) {
         </h2>
 
         {unpaid.length === 0 ? (
-          <p className="text-zinc-500">
+          <p className="text-muted">
             No unpaid fines.
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200">
+          <ul className="divide-y divide-line">
             {unpaid.map((fine) => (
               <li
                 key={fine.order_id}
@@ -187,7 +187,7 @@ async function Fines({ searchParams }) {
                       </span>
                     </div>
 
-                    <p className="mt-1 text-sm text-zinc-500">
+                    <p className="mt-1 text-sm text-muted">
                       Received {when(fine.received_at)}
                     </p>
                   </div>
@@ -227,7 +227,7 @@ async function Fines({ searchParams }) {
                       maxLength={200}
                       rows={1}
                       placeholder="Reason for waiving the fine..."
-                      className="min-w-0 flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm"
+                      className="min-w-0 flex-1 rounded-lg border border-field bg-white px-3 py-2 text-sm"
                     />
 
                     <SubmitButton variant="secondary">

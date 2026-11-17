@@ -18,15 +18,15 @@ export default function BagLookup() {
     <Card>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink">
             Bag lookup
           </p>
           <h2 className="mt-1 text-lg font-semibold">Find the right bag</h2>
-          <p className="mt-1 max-w-xl text-sm text-zinc-500">
+          <p className="mt-1 max-w-xl text-sm text-muted">
             Search by the number on the tag, then confirm its prefix. A number can belong to more than one bag.
           </p>
         </div>
-        <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-800">
+        <span className="rounded-full bg-peach-soft px-3 py-1 text-xs font-medium text-ink">
           Search by number
         </span>
       </div>
@@ -50,7 +50,7 @@ export default function BagLookup() {
             step="1"
             required
             placeholder="Enter the number on the tag"
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-base outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
+            className="w-full rounded-lg border border-field bg-white px-3 py-2.5 text-base outline-none transition focus:border-ink focus:ring-2 focus:ring-peach"
           />
         </div>
         <Button type="submit" disabled={searching} className="min-h-11 sm:min-w-32">
@@ -61,7 +61,7 @@ export default function BagLookup() {
       {searchState.error && <Alert>{searchState.error}</Alert>}
 
       {searchState.searched && !searchState.error && (
-        <div className="mt-5 border-t border-zinc-200 pt-4">
+        <div className="mt-5 border-t border-line pt-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h3 className="text-sm font-semibold">
               {searchState.results.length === 0
@@ -69,7 +69,7 @@ export default function BagLookup() {
                 : `${searchState.results.length} matching ${searchState.results.length === 1 ? "bag" : "bags"}`}
             </h3>
             {searchState.results.length > 1 && (
-              <span className="text-xs text-zinc-500">Select the exact prefix</span>
+              <span className="text-xs text-muted">Select the exact prefix</span>
             )}
           </div>
 
@@ -103,8 +103,8 @@ function BagResult({ student, selected, onSelect }) {
     <li
       className={`rounded-xl border p-3 transition-colors ${
         selected
-          ? "border-teal-500 bg-teal-50/70 ring-1 ring-teal-500/30"
-          : "border-zinc-200 bg-zinc-50/70"
+          ? "border-peach-hover bg-peach-soft ring-1 ring-peach-hover/60"
+          : "border-line bg-zinc-50/70"
       }`}
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -119,7 +119,7 @@ function BagResult({ student, selected, onSelect }) {
             <BagTag prefix={student.bag_prefix} number={student.bag_number} />
             <span className="truncate font-medium">{student.full_name}</span>
           </span>
-          <span className="shrink-0 text-xs text-zinc-500">
+          <span className="shrink-0 text-xs text-muted">
             {selected ? "Selected" : "Select"}
           </span>
         </Button>

@@ -30,18 +30,18 @@ export default async function TopBar() {
           <Link
             key={l.href}
             href={l.href}
-            className="rounded-lg px-3 py-1.5 whitespace-nowrap text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+            className="rounded-lg px-3 py-1.5 whitespace-nowrap text-muted hover:bg-zinc-100 hover:text-zinc-900"
           >
             {l.label}
           </Link>
         ))}
       </nav>
       <div className="ml-auto flex items-center gap-3">
-        <span className="hidden text-sm text-zinc-500 sm:inline">{name}</span>
+        <span className="hidden text-sm text-muted sm:inline">{name}</span>
         <form action={signOut}>
           <button
             type="submit"
-            className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-100"
+            className="rounded-lg border border-field px-3 py-1.5 text-sm hover:bg-zinc-100"
           >
             Sign out
           </button>
@@ -54,10 +54,10 @@ export default async function TopBar() {
 /** The bar itself; also the loading placeholder. */
 export function Shell({ children }) {
   return (
-    <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/85 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-line bg-white/85 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-4xl items-center gap-4 px-4 sm:px-6">
         <Link href="/dashboard" className="shrink-0 font-semibold tracking-tight">
-          Laundry<span className="text-teal-600">Flow</span>
+          Laundry<span className="text-brand">Flow</span>
         </Link>
         {children}
       </div>

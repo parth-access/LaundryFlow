@@ -20,7 +20,7 @@ export default function Home() {
     <div className="flex flex-1 flex-col">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
         <span className="text-lg font-semibold tracking-tight">
-          Laundry<span className="text-teal-600">Flow</span>
+          Laundry<span className="text-brand">Flow</span>
         </span>
         <Link href="/login" className="rounded-lg px-4 py-2 text-sm font-medium hover:bg-zinc-100">
           Sign in
@@ -31,30 +31,30 @@ export default function Home() {
         {/* Hero */}
         <section className="grid items-center gap-12 py-16 md:grid-cols-2 md:py-24">
           <div className="space-y-6">
-            <p className="inline-block rounded-full bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+            <p className="inline-block rounded-full bg-peach-soft px-3 py-1 text-sm font-medium text-ink">
               For Rishihood hostel laundry
             </p>
             <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-              The laundry register, <span className="text-teal-600">without the paper.</span>
+              The laundry register, <span className="text-brand">without the paper.</span>
             </h1>
-            <p className="max-w-md text-lg text-zinc-600">
+            <p className="max-w-md text-lg text-muted">
               Submit from your phone, get counted at the counter, and always know where your bag is.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/login"
-                className="rounded-lg bg-teal-600 px-5 py-3 font-medium text-white hover:bg-teal-700"
+                className="rounded-full bg-peach px-5 py-3 font-medium text-ink hover:bg-peach-hover"
               >
                 Sign in with college Google
               </Link>
-              <a href="#how" className="rounded-lg border border-zinc-300 px-5 py-3 font-medium hover:bg-zinc-100">
+              <a href="#how" className="rounded-lg border border-field px-5 py-3 font-medium hover:bg-zinc-100">
                 How it works
               </a>
             </div>
           </div>
 
           {/* Sample order card */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-line bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="rounded-md bg-zinc-100 px-2 py-0.5 font-mono font-semibold">B 1054</span>
               <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
@@ -63,11 +63,11 @@ export default function Home() {
             </div>
             <dl className="mt-6 grid grid-cols-2 gap-4 text-sm">
               <div>
-                <dt className="text-zinc-500">Declared</dt>
+                <dt className="text-muted">Declared</dt>
                 <dd className="text-2xl font-semibold">10</dd>
               </div>
               <div>
-                <dt className="text-zinc-500">Counted</dt>
+                <dt className="text-muted">Counted</dt>
                 <dd className="text-2xl font-semibold text-amber-600">13</dd>
               </div>
             </dl>
@@ -89,12 +89,12 @@ export default function Home() {
           <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
           <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
-              <li key={s.n} className="rounded-xl border border-zinc-200 p-5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
+              <li key={s.n} className="rounded-xl border border-line p-5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-peach text-sm font-semibold text-ink">
                   {s.n}
                 </span>
                 <h3 className="mt-4 font-medium">{s.title}</h3>
-                <p className="mt-1 text-sm text-zinc-600">{s.text}</p>
+                <p className="mt-1 text-sm text-muted">{s.text}</p>
               </li>
             ))}
           </ol>
@@ -102,40 +102,40 @@ export default function Home() {
 
         {/* The rule */}
         <section className="py-12">
-          <div className="grid gap-6 rounded-2xl bg-zinc-900 p-8 text-white sm:grid-cols-3">
+          <div className="grid gap-6 rounded-2xl bg-ink p-8 text-white sm:grid-cols-3">
             <div>
               <p className="text-4xl font-semibold">10</p>
-              <p className="mt-1 text-zinc-400">clothes free per bag</p>
+              <p className="mt-1 text-muted">clothes free per bag</p>
             </div>
             <div>
               <p className="text-4xl font-semibold">Rs 5</p>
-              <p className="mt-1 text-zinc-400">for every extra cloth</p>
+              <p className="mt-1 text-muted">for every extra cloth</p>
             </div>
             <div>
               <p className="text-4xl font-semibold">0</p>
-              <p className="mt-1 text-zinc-400">lost register entries</p>
+              <p className="mt-1 text-muted">lost register entries</p>
             </div>
           </div>
         </section>
 
         {/* Who it's for */}
         <section className="grid gap-4 py-12 sm:grid-cols-2">
-          <div className="rounded-xl border border-zinc-200 p-6">
+          <div className="rounded-xl border border-line p-6">
             <h3 className="font-medium">Students</h3>
-            <p className="mt-2 text-sm text-zinc-600">
+            <p className="mt-2 text-sm text-muted">
               Sign in with your <strong>@rishihood.edu.in</strong> account, submit laundry, and see your orders and fines.
             </p>
           </div>
-          <div className="rounded-xl border border-zinc-200 p-6">
+          <div className="rounded-xl border border-line p-6">
             <h3 className="font-medium">Laundry staff</h3>
-            <p className="mt-2 text-sm text-zinc-600">
+            <p className="mt-2 text-sm text-muted">
               Find a bag by its number, count the clothes, and mark orders ready and collected.
             </p>
           </div>
         </section>
       </main>
 
-      <footer className="mx-auto w-full max-w-5xl px-6 py-8 text-sm text-zinc-500">
+      <footer className="mx-auto w-full max-w-5xl px-6 py-8 text-sm text-muted">
         LaundryFlow · a student project at NST Rishihood University
       </footer>
     </div>

@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { registerStudent } from "./actions";
 
 const input =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900";
+  "w-full rounded-lg border border-field bg-white px-3 py-2 text-zinc-900";
 
 export default function RegisterForm({ email, suggestedName }) {
   const [state, action, pending] = useActionState(registerStudent, null);
@@ -42,13 +42,13 @@ export default function RegisterForm({ email, suggestedName }) {
           </select>
           <input name="bag_number" defaultValue={values.bag_number} required inputMode="numeric" pattern="[0-9]{1,5}" placeholder="1054" aria-label="Bag number" className={input} />
         </div>
-        <p className="mt-1 text-xs text-zinc-500">Staff will check your bag tag the first time you hand in laundry.</p>
+        <p className="mt-1 text-xs text-muted">Staff will check your bag tag the first time you hand in laundry.</p>
       </div>
 
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-teal-600 px-4 py-3 font-medium text-white hover:bg-teal-700 disabled:opacity-60"
+        className="w-full rounded-full bg-peach px-4 py-3 font-medium text-ink hover:bg-peach-hover disabled:opacity-60"
       >
         {pending ? "Saving..." : "Create my profile"}
       </button>

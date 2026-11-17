@@ -12,7 +12,7 @@ export const metadata = { title: "Admin | LaundryFlow" };
 export default function AdminPage() {
   return (
     <AppPage title="Admin">
-      <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
+      <Suspense fallback={<p className="text-muted">Loading...</p>}>
         <Admin />
       </Suspense>
     </AppPage>
@@ -29,16 +29,16 @@ async function Admin() {
     <>
       {/* TODO (Parth): numbers at a glance: orders today, waiting at counter, unpaid fines total (R42) */}
       <Card>
-        <p className="font-mono text-sm text-zinc-500">TODO: today&apos;s numbers go here.</p>
+        <p className="font-mono text-sm text-muted">TODO: today&apos;s numbers go here.</p>
       </Card>
 
       <Card>
         <h2 className="mb-3 text-lg font-medium">Staff ({staffList.length})</h2>
-        <ul className="divide-y divide-zinc-200">
+        <ul className="divide-y divide-line">
           {staffList.map((s) => (
             <li key={s.staff_id} className="flex items-center justify-between py-2">
               <span>
-                {s.full_name} <span className="text-sm text-zinc-500">{s.email}</span>
+                {s.full_name} <span className="text-sm text-muted">{s.email}</span>
               </span>
               <span className="text-sm">
                 {s.role.toLowerCase()} {s.is_active ? "" : "· inactive"}

@@ -9,7 +9,7 @@ export const metadata = { title: "Counter | LaundryFlow" };
 export default function CounterPage() {
   return (
     <AppPage title="Laundry counter" subtitle="Receive bags and record verified counts">
-      <Suspense fallback={<p className="text-zinc-500">Loading the counter queue…</p>}>
+      <Suspense fallback={<p className="text-muted">Loading the counter queue…</p>}>
         <CounterQueue />
       </Suspense>
     </AppPage>

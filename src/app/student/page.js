@@ -12,7 +12,7 @@ export const metadata = { title: "My laundry | LaundryFlow" };
 export default function StudentPage() {
   return (
     <AppPage title="My laundry">
-      <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
+      <Suspense fallback={<p className="text-muted">Loading...</p>}>
         <StudentHome />
       </Suspense>
     </AppPage>
@@ -38,10 +38,10 @@ async function StudentHome() {
       <Card>
         <h2 className="mb-3 text-lg font-medium">My orders</h2>
         {orders.length === 0 ? (
-          <p className="text-zinc-500">No orders yet.</p>
+          <p className="text-muted">No orders yet.</p>
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="text-zinc-500">
+            <thead className="text-muted">
               <tr>
                 <th className="py-1">Submitted</th>
                 <th>Status</th>
@@ -54,7 +54,7 @@ async function StudentHome() {
               {orders.map((o) => (
                 <tr
                   key={o.order_id}
-                  className="border-t border-zinc-200"
+                  className="border-t border-line"
                 >
                   <td className="py-2">{when(o.submitted_at)}</td>
                   <td>

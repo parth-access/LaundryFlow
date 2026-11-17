@@ -52,7 +52,7 @@ export default function SubmitForm({ hasActiveOrder }) {
               defaultValue={state.values?.declared_count ?? ""}
               placeholder="Enter number of clothes"
               disabled={pending}
-              className="w-full rounded-lg border border-zinc-300 bg-transparent px-3 py-2"
+              className="w-full rounded-lg border border-field bg-transparent px-3 py-2"
             />
           </div>
 

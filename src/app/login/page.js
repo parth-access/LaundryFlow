@@ -14,11 +14,11 @@ export default function LoginPage({ searchParams }) {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16">
       <Link href="/" className="text-xl font-semibold tracking-tight">
-        Laundry<span className="text-teal-600">Flow</span>
+        Laundry<span className="text-brand">Flow</span>
       </Link>
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm">
+      <div className="w-full max-w-sm space-y-6 rounded-2xl border border-line bg-white p-8 text-center shadow-sm">
         <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-        <p className="text-zinc-600">
+        <p className="text-muted">
           Students sign in with their college Google account. Laundry staff use the Google account an admin has added.
         </p>
 
@@ -30,9 +30,9 @@ export default function LoginPage({ searchParams }) {
         <form action={signInWithGoogle}>
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50"
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-field bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50"
           >
-            <span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white">
+            <span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
               G
             </span>
             Continue with Google

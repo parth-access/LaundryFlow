@@ -11,7 +11,7 @@ export const metadata = { title: "Dashboard | LaundryFlow" };
 export default function DashboardPage() {
   return (
     <AppPage title="Dashboard" back={null}>
-      <Suspense fallback={<p className="text-zinc-500">Loading...</p>}>
+      <Suspense fallback={<p className="text-muted">Loading...</p>}>
         <Dashboard />
       </Suspense>
     </AppPage>
@@ -21,20 +21,20 @@ export default function DashboardPage() {
 function AreaCard({ href, title, text, stat, statLabel }) {
   return (
     <Link href={href} className="group block">
-      <Card className="h-full transition-shadow group-hover:shadow-md group-hover:ring-1 group-hover:ring-teal-500/40">
+      <Card className="h-full transition-shadow group-hover:shadow-md group-hover:ring-1 group-hover:ring-peach-hover">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-lg font-medium">{title}</h2>
-            <p className="mt-1 text-sm text-zinc-500">{text}</p>
+            <p className="mt-1 text-sm text-muted">{text}</p>
           </div>
           {stat !== undefined && (
             <div className="text-right">
-              <p className="text-3xl font-semibold text-teal-600">{stat}</p>
-              <p className="text-xs text-zinc-500">{statLabel}</p>
+              <p className="text-3xl font-semibold text-brand">{stat}</p>
+              <p className="text-xs text-muted">{statLabel}</p>
             </div>
           )}
         </div>
-        <p className="mt-4 text-sm font-medium text-teal-600 group-hover:underline">Open &rarr;</p>
+        <p className="mt-4 text-sm font-medium text-brand group-hover:underline">Open &rarr;</p>
       </Card>
     </Link>
   );
@@ -50,12 +50,12 @@ async function Dashboard() {
       <div className="space-y-6">
         <Card className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-sm text-zinc-500">Welcome back</p>
+            <p className="text-sm text-muted">Welcome back</p>
             <p className="text-xl font-semibold">{s.full_name}</p>
           </div>
           <div className="text-right">
             <BagTag prefix={s.bag_prefix} number={s.bag_number} />
-            <p className="mt-1 text-xs text-zinc-500">{s.bag_verified_at ? "verified by staff" : "not verified yet"}</p>
+            <p className="mt-1 text-xs text-muted">{s.bag_verified_at ? "verified by staff" : "not verified yet"}</p>
           </div>
         </Card>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -66,7 +66,7 @@ async function Dashboard() {
           />
           {active && (
             <Card className="flex items-center justify-between">
-              <span className="text-sm text-zinc-500">Current order</span>
+              <span className="text-sm text-muted">Current order</span>
               <StatusBadge status={active.order_status} />
             </Card>
           )}
@@ -81,7 +81,7 @@ async function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <p className="text-zinc-500">
+      <p className="text-muted">
         Signed in as <span className="font-medium text-zinc-900">{access.staff.full_name}</span>{" "}
         ({access.staff.role.toLowerCase()})
       </p>

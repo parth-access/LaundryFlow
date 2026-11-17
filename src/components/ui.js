@@ -9,12 +9,12 @@ export function Page({ title, subtitle, back = "/dashboard", children }) {
     <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8 sm:px-6 sm:py-10">
       <div className="space-y-1">
         {back && (
-          <Link href={back} className="text-sm text-zinc-500 hover:text-teal-600">
+          <Link href={back} className="text-sm text-muted hover:text-brand">
             &larr; Back
           </Link>
         )}
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
-        {subtitle && <p className="text-zinc-500">{subtitle}</p>}
+        {subtitle && <p className="text-muted">{subtitle}</p>}
       </div>
       {children}
     </main>
@@ -24,7 +24,7 @@ export function Page({ title, subtitle, back = "/dashboard", children }) {
 export function Card({ children, className = "" }) {
   return (
     <section
-      className={`rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm ${className}`}
+      className={`rounded-2xl border border-line bg-white p-5 shadow-sm ${className}`}
     >
       {children}
     </section>
@@ -32,8 +32,8 @@ export function Card({ children, className = "" }) {
 }
 
 const buttonStyles = {
-  primary: "bg-teal-600 text-white hover:bg-teal-700 focus-visible:outline-teal-600",
-  secondary: "border border-zinc-300 hover:bg-zinc-100",
+  primary: "bg-peach text-ink hover:bg-peach-hover focus-visible:outline-ink",
+  secondary: "border border-field hover:bg-zinc-100",
   danger: "bg-red-600 text-white hover:bg-red-500",
 };
 
@@ -59,7 +59,7 @@ const statusColors = {
   RECEIVED: "bg-amber-100 text-amber-800",
   READY: "bg-green-100 text-green-800",
   COLLECTED: "bg-zinc-200 text-zinc-700",
-  CANCELLED: "bg-zinc-200 text-zinc-500",
+  CANCELLED: "bg-zinc-200 text-muted",
   DISPUTED: "bg-red-100 text-red-800",
 };
 
