@@ -28,10 +28,20 @@ async function Unpaid({ searchParams }) {
           <EmptyState title="No unpaid fines">Fines appear here when a bag is counted over the free limit.</EmptyState>
         ) : (
           <>
-            <p className="text-muted">
-              {money(fines.reduce((s, f) => s + Number(f.fine_amount), 0))} outstanding across {fines.length}{" "}
-              {fines.length === 1 ? "bag" : "bags"}.
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-muted">
+                {money(fines.reduce((s, f) => s + Number(f.fine_amount), 0))} outstanding across {fines.length}{" "}
+                {fines.length === 1 ? "bag" : "bags"}.
+              </p>
+              {/* a plain link: the browser downloads the file the route sends back */}
+              <a
+                href="/fines/unpaid/export"
+                download
+                className="rounded-full border border-field px-4 py-2 text-sm font-medium hover:bg-peach-soft"
+              >
+                Download CSV
+              </a>
+            </div>
             <div className="space-y-3">
               {fines.map((f) => (
                 <Card key={f.order_id} className="p-4 sm:p-5">
