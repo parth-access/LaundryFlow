@@ -22,7 +22,7 @@ export default function Home() {
         <span className="text-lg font-semibold tracking-tight">
           Laundry<span className="text-brand">Flow</span>
         </span>
-        <Link href="/login" className="rounded-lg px-4 py-2 text-sm font-medium hover:bg-zinc-100">
+        <Link href="/login" className="rounded-full px-4 py-2 text-sm font-medium hover:bg-peach-soft">
           Sign in
         </Link>
       </header>
@@ -47,7 +47,7 @@ export default function Home() {
               >
                 Sign in with college Google
               </Link>
-              <a href="#how" className="rounded-lg border border-field px-5 py-3 font-medium hover:bg-zinc-100">
+              <a href="#how" className="rounded-full border border-field px-5 py-3 font-medium hover:bg-zinc-100">
                 How it works
               </a>
             </div>
@@ -105,15 +105,15 @@ export default function Home() {
           <div className="grid gap-6 rounded-2xl bg-ink p-8 text-white sm:grid-cols-3">
             <div>
               <p className="text-4xl font-semibold">10</p>
-              <p className="mt-1 text-muted">clothes free per bag</p>
+              <p className="mt-1 text-white/70">clothes free per bag</p>
             </div>
             <div>
               <p className="text-4xl font-semibold">Rs 5</p>
-              <p className="mt-1 text-muted">for every extra cloth</p>
+              <p className="mt-1 text-white/70">for every extra cloth</p>
             </div>
             <div>
               <p className="text-4xl font-semibold">0</p>
-              <p className="mt-1 text-muted">lost register entries</p>
+              <p className="mt-1 text-white/70">lost register entries</p>
             </div>
           </div>
         </section>

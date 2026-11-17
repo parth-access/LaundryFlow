@@ -40,7 +40,7 @@ const buttonStyles = {
 export function Button({ variant = "primary", className = "", ...props }) {
   return (
     <button
-      className={`rounded-lg px-4 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${buttonStyles[variant]} ${className}`}
+      className={`rounded-full px-5 py-2 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${buttonStyles[variant]} ${className}`}
       {...props}
     />
   );

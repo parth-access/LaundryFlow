@@ -41,7 +41,7 @@ export default async function TopBar() {
         <form action={signOut}>
           <button
             type="submit"
-            className="rounded-lg border border-field px-3 py-1.5 text-sm hover:bg-zinc-100"
+            className="whitespace-nowrap rounded-full border border-field px-3 py-1.5 text-sm sm:px-4 hover:bg-zinc-100"
           >
             Sign out
           </button>
@@ -55,7 +55,7 @@ export default async function TopBar() {
 export function Shell({ children }) {
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-white/85 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-4xl items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 w-full max-w-4xl items-center gap-2 px-4 sm:gap-4 sm:px-6">
         <Link href="/dashboard" className="shrink-0 font-semibold tracking-tight">
           Laundry<span className="text-brand">Flow</span>
         </Link>

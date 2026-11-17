@@ -30,7 +30,7 @@ export default function LoginPage({ searchParams }) {
         <form action={signInWithGoogle}>
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-field bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50"
+            className="flex w-full items-center justify-center gap-3 rounded-full border border-field bg-white px-4 py-3 font-medium text-zinc-900 hover:bg-zinc-50"
           >
             <span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
               G
