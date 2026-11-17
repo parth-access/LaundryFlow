@@ -309,6 +309,26 @@ WHERE o.order_status = 'READY'
 ORDER BY o.ready_at`,
   },
 
+  R33: {
+    id: "R33",
+    title: "Settled fines (history)",
+    purpose:
+      "The last 50 fines that were paid or waived, newest first, so an admin can check who was let off and why. " +
+      "LEFT JOIN staff because only waived fines have a waived_by.",
+    params: [],
+    text: `
+SELECT f.order_id, f.fine_amount, f.fine_status, f.fine_paid_at, f.waiver_reason,
+       o.received_at, s.bag_prefix, s.bag_number, s.full_name,
+       w.full_name AS waived_by_name
+FROM fines f
+JOIN orders o ON o.order_id = f.order_id
+JOIN students s ON s.student_id = o.student_id
+LEFT JOIN staff w ON w.staff_id = f.waived_by
+WHERE f.fine_status IN ('PAID', 'WAIVED')
+ORDER BY coalesce(f.fine_paid_at, o.received_at) DESC
+LIMIT 50`,
+  },
+
   W30: {
     id: "W30",
     title: "Mark order ready",
