@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { requireAccess } from "@/lib/auth";
 import { cancelOrder } from "../../actions";
+import ChangeCountForm from "./change-count-form";
 import { run } from "@/lib/db";
 import { AppPage } from "@/components/app-page";
 import { Alert, Card, OrderTracker, StatusBadge, money, when } from "@/components/ui";
@@ -67,6 +68,12 @@ async function Order({ params, searchParams }) {
                 ? "Counted by staff, matches your count."
                 : `Counted by staff. You said ${order.declared_count}.`}
           </p>
+          {order.order_status === "SUBMITTED" && (
+            <details className="mt-3">
+              <summary className="cursor-pointer text-sm font-medium text-muted hover:text-ink">Counted wrong?</summary>
+              <ChangeCountForm orderId={order.order_id} current={order.declared_count} />
+            </details>
+          )}
         </Card>
 
         <Card>
