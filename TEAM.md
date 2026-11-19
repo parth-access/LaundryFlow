@@ -23,10 +23,14 @@ The demo data (`scripts/demo-data.sql`) has one order in every state: two waitin
 ## Tasks
 
 ### Aarabdh: student side (`/student`)
-- [ ] Submit laundry form: number of clothes (1 to 100), server action in `src/app/student/actions.js` calling `run("W10", [...])` (insert only if no active order, one query). Look at `src/app/register/` for a complete form + action example.
-- [ ] Stop a second submit while the student already has an order in SUBMITTED / RECEIVED / READY (new read query R10).
-- [ ] Show a clear message after submitting.
-- [ ] (if time) cancel an order that is still SUBMITTED (W11).
+- [x] Submit laundry form: number of clothes (1 to 100), server action in `src/app/student/actions.js` calling `run("W10", [...])` (insert only if no active order, one query). Look at `src/app/register/` for a complete form + action example.
+- [x] Stop a second submit while the student already has an order in SUBMITTED / RECEIVED / READY (new read query R10).
+- [x] Show a clear message after submitting.
+- [x] Cancel an order that is still SUBMITTED (W11), two-step so a stray tap does not cancel.
+- [x] Change the clothes count before staff count the bag (W12).
+- [x] Shared clothes count check `src/lib/clothes-count.js` + tests.
+- [x] My fines page: amount owed, then paid and waived fines (R12).
+- [x] Profile page: details and laundry in numbers (R13, one query with FILTER).
 
 ### Tanishq: counter (`/counter`)
 - [ ] Bag lookup: type a number, show matching B / G students (`R01` already exists).
