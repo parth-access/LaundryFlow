@@ -8,6 +8,11 @@ import { Alert, Card, OrderTracker, StatusBadge, money, when } from "@/component
 
 export const metadata = { title: "Order | LaundryFlow" };
 
+const ERRORS = {
+  "already-counted": "Staff have already counted this bag, so it can't be changed from here. Ask at the counter.",
+  "cancel-failed": "That didn't go through. Try again.",
+};
+
 export default function OrderPage({ params, searchParams }) {
   return (
     <AppPage title="Your order" back={{ href: "/student/orders", label: "My orders" }}>
@@ -21,7 +26,7 @@ export default function OrderPage({ params, searchParams }) {
 async function Order({ params, searchParams }) {
   const { student } = await requireAccess(["student"]);
   const { id } = await params;
-  const { new: isNew } = await searchParams;
+  const { new: isNew, cancelled, changed, error } = await searchParams;
   if (!/^[1-9][0-9]{0,9}$/.test(id)) notFound();
 
   const [order] = await run("R11", [Number(id), student.student_id]);
@@ -32,6 +37,9 @@ async function Order({ params, searchParams }) {
   return (
     <>
       {isNew && <Alert kind="success">Handed in. Take your bag to the laundry counter.</Alert>}
+      {cancelled && <Alert kind="success">Hand-in cancelled. You can hand in again whenever you are ready.</Alert>}
+      {changed && <Alert kind="success">Count updated.</Alert>}
+      {ERRORS[error] && <Alert>{ERRORS[error]}</Alert>}
 
       <Card>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
