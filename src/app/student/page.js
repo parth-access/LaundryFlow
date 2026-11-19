@@ -48,7 +48,12 @@ async function StudentHome() {
           <p className="font-medium text-red-900">
             You have {money(unpaid.reduce((s, o) => s + Number(o.fine_amount), 0))} in unpaid fines.
           </p>
-          <p className="mt-1 text-sm text-red-800">Pay at the laundry counter when you collect your bag.</p>
+          <p className="mt-1 text-sm text-red-800">
+            Pay at the laundry counter when you collect your bag.{" "}
+            <Link href="/student/fines" className="font-medium underline underline-offset-2">
+              See your fines
+            </Link>
+          </p>
         </Card>
       )}
 
