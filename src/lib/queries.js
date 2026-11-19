@@ -179,6 +179,27 @@ WHERE o.student_id = $1
 ORDER BY (f.fine_status = 'UNPAID') DESC, o.received_at DESC`,
   },
 
+  R13: {
+    id: "R13",
+    title: "A student's laundry in numbers",
+    purpose:
+      "Profile page: how many bags were washed, how many clothes, fines paid, and the average time from " +
+      "handing in to ready. One pass over the student's orders with FILTER clauses; cancelled orders are left out. " +
+      "count(*) FILTER always returns a row, even for a brand-new student with no orders.",
+    params: ["student_id"],
+    text: `
+SELECT count(*) FILTER (WHERE o.order_status <> 'CANCELLED')::int                         AS bags,
+       count(*) FILTER (WHERE o.order_status = 'COLLECTED')::int                          AS collected,
+       coalesce(sum(o.verified_count) FILTER (WHERE o.order_status <> 'CANCELLED'), 0)::int AS clothes,
+       coalesce(sum(f.fine_amount) FILTER (WHERE f.fine_status = 'PAID'), 0)              AS fines_paid,
+       round(avg(extract(epoch FROM o.ready_at - o.submitted_at) / 3600)
+             FILTER (WHERE o.ready_at IS NOT NULL))::int                                  AS avg_hours_to_ready,
+       min(o.submitted_at)                                                                AS first_hand_in
+FROM orders o
+LEFT JOIN fines f ON f.order_id = o.order_id
+WHERE o.student_id = $1`,
+  },
+
   W10: {
     id: "W10",
     title: "Submit order if no active order exists",
