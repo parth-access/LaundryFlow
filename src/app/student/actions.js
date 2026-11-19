@@ -4,13 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAccess } from "@/lib/auth";
 import { run } from "@/lib/db";
+import { parseClothesCount, MAX_CLOTHES } from "@/lib/clothes-count";
 
 export async function submitLaundry(_previous, formData) {
   const { student } = await requireAccess(["student"]);
 
   const rawCount = String(formData.get("declared_count") ?? "").trim();
 
-  const declaredCount = Number(rawCount);
+  const declaredCount = parseClothesCount(rawCount);
 
   const values = {
     declared_count: rawCount,
@@ -23,8 +24,8 @@ export async function submitLaundry(_previous, formData) {
   });
 
   // Validate the clothes count
-  if (!/^[0-9]+$/.test(rawCount) || declaredCount < 1 || declaredCount > 100) {
-    return fail("Enter a valid number of clothes between 1 and 100.");
+  if (declaredCount === null) {
+    return fail(`Enter a valid number of clothes between 1 and ${MAX_CLOTHES}.`);
   }
 
   let orderId;
