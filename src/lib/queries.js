@@ -162,6 +162,23 @@ WHERE o.order_id = $1
   AND o.student_id = $2`,
   },
 
+  R12: {
+    id: "R12",
+    title: "A student's fines",
+    purpose:
+      "My fines page: every fine on this student's orders, unpaid first, then newest. " +
+      "Filtered on student_id through the join, so a student only ever sees their own.",
+    params: ["student_id"],
+    text: `
+SELECT f.order_id, f.fine_amount, f.fine_status, f.fine_paid_at, f.waiver_reason,
+       o.verified_count, o.received_at, p.free_limit, p.fine_per_extra
+FROM fines f
+JOIN orders o   ON o.order_id = f.order_id
+JOIN policies p ON p.policy_id = o.policy_id
+WHERE o.student_id = $1
+ORDER BY (f.fine_status = 'UNPAID') DESC, o.received_at DESC`,
+  },
+
   W10: {
     id: "W10",
     title: "Submit order if no active order exists",
