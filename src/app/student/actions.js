@@ -52,3 +52,29 @@ export async function submitLaundry(_previous, formData) {
   // redirect() works by throwing, so it must stay outside the try/catch above
   redirect(`/student/orders/${orderId}?new=1`);
 }
+
+// Cancel a hand-in before staff count it (W11). The query itself checks the order is
+// this student's and still SUBMITTED, so the order id from the form cannot be misused.
+export async function cancelOrder(formData) {
+  const { student } = await requireAccess(["student"]);
+  const orderId = Number(formData.get("order_id"));
+
+  if (!Number.isSafeInteger(orderId) || orderId < 1) {
+    redirect("/student/orders");
+  }
+
+  let rows;
+  try {
+    rows = await run("W11", [orderId, student.student_id]);
+  } catch (error) {
+    console.error("Could not cancel laundry order:", error);
+    redirect(`/student/orders/${orderId}?error=cancel-failed`);
+  }
+
+  if (rows.length === 0) {
+    redirect(`/student/orders/${orderId}?error=already-counted`);
+  }
+
+  revalidatePath("/student");
+  redirect(`/student/orders/${orderId}?cancelled=1`);
+}
