@@ -181,6 +181,23 @@ ON CONFLICT DO NOTHING
 RETURNING order_id, submitted_at`,
   },
 
+  W11: {
+    id: "W11",
+    title: "Cancel a hand-in",
+    purpose:
+      "A student cancels an order they handed in by mistake. Only while it is still SUBMITTED (staff have not " +
+      "counted it yet), and only their own order: both rules are in the WHERE, so a forged form changes nothing. " +
+      "Zero rows back means it was already counted or is not theirs.",
+    params: ["order_id", "student_id"],
+    text: `
+UPDATE orders
+SET order_status = 'CANCELLED'
+WHERE order_id = $1
+  AND student_id = $2
+  AND order_status = 'SUBMITTED'
+RETURNING order_id`,
+  },
+
   // ---- Tanishq: R20-R29, W20-W29 (counter side) ----
 
   R20: {
