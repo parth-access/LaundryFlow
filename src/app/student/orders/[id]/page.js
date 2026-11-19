@@ -85,7 +85,11 @@ async function Order({ params, searchParams }) {
             <>
               <p className="mt-1 font-display text-4xl font-semibold">None</p>
               <p className="mt-1 text-sm text-muted">
-                {order.verified_count === null ? "Worked out when staff count your clothes." : "Within the free limit."}
+                {order.order_status === "CANCELLED"
+                  ? "Cancelled orders have no fine."
+                  : order.verified_count === null
+                    ? "Worked out when staff count your clothes."
+                    : "Within the free limit."}
               </p>
             </>
           )}
