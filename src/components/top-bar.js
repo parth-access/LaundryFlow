@@ -10,6 +10,7 @@ const STUDENT = [
   { href: "/student", label: "Home", exact: true },
   { href: "/student/new", label: "Hand in" },
   { href: "/student/orders", label: "My orders" },
+  { href: "/student/fines", label: "Fines" },
 ];
 const STAFF = [
   { href: "/dashboard", label: "Today", exact: true },
