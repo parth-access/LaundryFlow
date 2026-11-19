@@ -198,6 +198,22 @@ WHERE order_id = $1
 RETURNING order_id`,
   },
 
+  W12: {
+    id: "W12",
+    title: "Change the clothes count on a hand-in",
+    purpose:
+      "A student fixes the number they typed, only while the order is still SUBMITTED and only on their own order. " +
+      "Once staff count the bag, verified_count is what matters, so changing declared_count later is blocked.",
+    params: ["order_id", "student_id", "declared_count"],
+    text: `
+UPDATE orders
+SET declared_count = $3
+WHERE order_id = $1
+  AND student_id = $2
+  AND order_status = 'SUBMITTED'
+RETURNING order_id, declared_count`,
+  },
+
   // ---- Tanishq: R20-R29, W20-W29 (counter side) ----
 
   R20: {
