@@ -78,3 +78,33 @@ export async function cancelOrder(formData) {
   revalidatePath("/student");
   redirect(`/student/orders/${orderId}?cancelled=1`);
 }
+
+// Fix the clothes count on a hand-in that staff have not counted yet (W12).
+// Used with useActionState, so it returns an error message instead of redirecting on bad input.
+export async function changeCount(_previous, formData) {
+  const { student } = await requireAccess(["student"]);
+  const orderId = Number(formData.get("order_id"));
+  const count = parseClothesCount(formData.get("declared_count"));
+
+  if (!Number.isSafeInteger(orderId) || orderId < 1) {
+    return { error: "This order can't be changed." };
+  }
+  if (count === null) {
+    return { error: `Enter a number of clothes between 1 and ${MAX_CLOTHES}.` };
+  }
+
+  let rows;
+  try {
+    rows = await run("W12", [orderId, student.student_id, count]);
+  } catch (error) {
+    console.error("Could not change clothes count:", error);
+    return { error: "That didn't save. Try again." };
+  }
+
+  if (rows.length === 0) {
+    redirect(`/student/orders/${orderId}?error=already-counted`);
+  }
+
+  revalidatePath("/student");
+  redirect(`/student/orders/${orderId}?changed=1`);
+}
