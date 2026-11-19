@@ -2,6 +2,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { requireAccess } from "@/lib/auth";
+import { cancelOrder } from "../../actions";
 import { run } from "@/lib/db";
 import { AppPage } from "@/components/app-page";
 import { Alert, Card, OrderTracker, StatusBadge, money, when } from "@/components/ui";
@@ -46,8 +47,14 @@ async function Order({ params, searchParams }) {
           <p className="text-muted">Handed in {when(order.submitted_at)}</p>
           <StatusBadge status={order.order_status} />
         </div>
-        <OrderTracker order={order} />
+        {order.order_status === "CANCELLED" ? (
+          <p className="text-muted">You cancelled this hand-in before it was counted. Nothing is owed.</p>
+        ) : (
+          <OrderTracker order={order} />
+        )}
       </Card>
+
+      {order.order_status === "SUBMITTED" && <CancelBox orderId={order.order_id} />}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>
@@ -85,5 +92,24 @@ async function Order({ params, searchParams }) {
         </Card>
       </div>
     </>
+  );
+}
+
+// Two steps on purpose: opening the box first, so a stray tap does not cancel.
+function CancelBox({ orderId }) {
+  return (
+    <details className="rounded-2xl border border-line bg-white px-5 py-4">
+      <summary className="cursor-pointer text-sm font-medium text-muted hover:text-ink">Handed in by mistake?</summary>
+      <form action={cancelOrder} className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <input type="hidden" name="order_id" value={orderId} />
+        <p className="text-sm text-muted">You can cancel until staff count your bag.</p>
+        <button
+          type="submit"
+          className="rounded-full border border-red-200 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+        >
+          Cancel this hand-in
+        </button>
+      </form>
+    </details>
   );
 }
