@@ -40,6 +40,9 @@ async function StudentHome() {
           {student.bag_verified_at
             ? "Staff have checked this tag. Show it at the counter."
             : "Staff will check this tag the first time you hand in laundry."}
+          <Link href="/student/profile" className="mt-2 block font-medium text-ink underline underline-offset-2">
+            Your profile
+          </Link>
         </p>
       </Card>
 
