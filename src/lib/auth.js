@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createSupabaseServer } from "./supabase/server.js";
@@ -15,16 +16,20 @@ import { normalizeEmail } from "./email-rules.js";
  *   { kind: "denied", reason }                 signed in, but not allowed
  *
  * Reads cookies, so call it inside a <Suspense> boundary (Cache Components rule).
+ *
+ * Wrapped in React cache(): the top bar and the page both ask "who is this?" while
+ * one request is being rendered, and cache() makes them share one answer, so the
+ * Supabase check and the two lookups run once per request instead of twice.
  */
-export async function getAccess() {
+export const getAccess = cache(async function getAccess() {
   // DEVELOPMENT ONLY: pretend to be signed in as DEV_LOGIN_EMAIL (set in .env.local),
   // so the team can build screens before Google sign-in is set up.
   // `next build` / `next start` run in production mode, where this is ignored.
   if (process.env.NODE_ENV === "development" && process.env.DEV_LOGIN_EMAIL) {
     await connection();
     const email = normalizeEmail(process.env.DEV_LOGIN_EMAIL);
-    const [staff] = await run("R05", [email]);
-    const [student] = await run("R04", [email]);
+    // two independent lookups: run them at the same time, not one after the other
+    const [[staff], [student]] = await Promise.all([run("R05", [email]), run("R04", [email])]);
     return { ...resolveAccess({ email, staff: staff ?? null, student: student ?? null }), name: "Dev User" };
   }
 
@@ -41,11 +46,11 @@ export async function getAccess() {
 
   const email = normalizeEmail(user.email);
   const name = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "";
-  const [staff] = await run("R05", [email]);
-  const [student] = await run("R04", [email]);
+  // two independent lookups: run them at the same time, not one after the other
+  const [[staff], [student]] = await Promise.all([run("R05", [email]), run("R04", [email])]);
 
   return { ...resolveAccess({ email, staff: staff ?? null, student: student ?? null }), name };
-}
+});
 
 /**
  * Use at the top of a protected page. Sends visitors who may not be there away.
