@@ -22,13 +22,12 @@ async function Counter({ searchParams }) {
   await requireAccess(["staff"]);
   const queue = await run("R02");
   const { received } = await searchParams;
-  const waiting = queue.map((o) => ({ order_id: o.order_id, student_id: o.student_id }));
 
   return (
     <>
       {received && <Alert kind="success">Bag received. {queue.length > 0 ? "Next one below." : "The queue is clear."}</Alert>}
 
-      <BagLookup waiting={waiting} />
+      <BagLookup />
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">

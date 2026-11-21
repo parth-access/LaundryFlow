@@ -40,6 +40,8 @@ export async function searchBags(_previousState, formData) {
         bag_prefix: row.bag_prefix,
         bag_number: row.bag_number,
         full_name: row.full_name,
+        order_id: row.order_id ?? null,
+        order_status: row.order_status ?? null,
         bag_verified_at: row.bag_verified_at
           ? new Date(row.bag_verified_at).toISOString()
           : null,

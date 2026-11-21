@@ -1,15 +1,14 @@
 "use client";
 
-// OWNER: Tanishq. Type the number on a bag tag; pick B or G; open that student's waiting bag.
+// OWNER: Tanishq. Type the number on a bag tag; pick B or G; see where that student's bag is.
 import { useActionState } from "react";
 import { Alert, BagTag, Button, ButtonLink, Card } from "@/components/ui";
 import { searchBags } from "./actions";
 
 const initialSearchState = { searched: false, error: null, results: [] };
 
-export default function BagLookup({ waiting }) {
+export default function BagLookup() {
   const [state, searchAction, searching] = useActionState(searchBags, initialSearchState);
-  const orderFor = (studentId) => waiting.find((w) => w.student_id === studentId)?.order_id;
 
   return (
     <Card>
@@ -53,7 +52,6 @@ export default function BagLookup({ waiting }) {
               )}
               <ul className="space-y-2">
                 {state.results.map((s) => {
-                  const orderId = orderFor(s.student_id);
                   return (
                     <li
                       key={s.student_id}
@@ -63,11 +61,7 @@ export default function BagLookup({ waiting }) {
                         <BagTag prefix={s.bag_prefix} number={s.bag_number} size="md" />
                         <span className="font-medium">{s.full_name}</span>
                       </div>
-                      {orderId ? (
-                        <ButtonLink href={`/counter/orders/${orderId}`}>Count this bag</ButtonLink>
-                      ) : (
-                        <span className="text-sm text-muted">No bag handed in</span>
-                      )}
+                      <BagStatus student={s} />
                     </li>
                   );
                 })}
@@ -78,4 +72,27 @@ export default function BagLookup({ waiting }) {
       )}
     </Card>
   );
+}
+
+// Where this student's bag is right now, with the page that handles that step.
+function BagStatus({ student }) {
+  const tag = `${student.bag_prefix}${student.bag_number}`;
+  switch (student.order_status) {
+    case "SUBMITTED":
+      return <ButtonLink href={`/counter/orders/${student.order_id}`}>Count this bag</ButtonLink>;
+    case "RECEIVED":
+      return (
+        <ButtonLink variant="secondary" href="/fines/wash">
+          Counted, in the wash
+        </ButtonLink>
+      );
+    case "READY":
+      return (
+        <ButtonLink variant="secondary" href={`/fines/pickup?bag=${tag}`}>
+          Ready for pickup
+        </ButtonLink>
+      );
+    default:
+      return <span className="text-sm text-muted">No bag handed in</span>;
+  }
 }
